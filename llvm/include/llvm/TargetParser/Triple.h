@@ -110,7 +110,9 @@ public:
     renderscript32, // 32-bit RenderScript
     renderscript64, // 64-bit RenderScript
     ve,             // NEC SX-Aurora Vector Engine
-    LastArchType = ve
+    cpu0,           // CPU0: CPU0 (experimental)
+    cpu0el,          // CPU0el: CPU0 64-bit (experimental)
+    LastArchType = cpu0el
   };
   enum SubArchType {
     NoSubArch,

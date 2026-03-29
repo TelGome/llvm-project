@@ -88,6 +88,8 @@ StringRef Triple::getArchTypeName(ArchType Kind) {
   case x86_64:         return "x86_64";
   case xcore:          return "xcore";
   case xtensa:         return "xtensa";
+  case cpu0:           return "cpu0";
+  case cpu0el:         return "cpu0el";
   }
 
   llvm_unreachable("Invalid ArchType!");
@@ -510,6 +512,8 @@ Triple::ArchType Triple::getArchTypeForLLVMName(StringRef Name) {
       .Case("loongarch64", loongarch64)
       .Case("dxil", dxil)
       .Case("xtensa", xtensa)
+      .Case("cpu0", cpu0)
+      .Case("cpu0el", cpu0el)
       .Default(UnknownArch);
 }
 
@@ -661,6 +665,8 @@ static Triple::ArchType parseArch(StringRef ArchName) {
                   "dxilv1.9"},
                  Triple::dxil)
           .Case("xtensa", Triple::xtensa)
+          .Case("cpu0", Triple::cpu0)
+          .Case("cpu0el", Triple::cpu0el)
           .Default(Triple::UnknownArch);
 
   // Some architectures require special parsing logic just to compute the
@@ -1013,6 +1019,8 @@ static Triple::ObjectFormatType getDefaultFormat(const Triple &T) {
   case Triple::ve:
   case Triple::xcore:
   case Triple::xtensa:
+  case Triple::cpu0:
+  case Triple::cpu0el:
     return Triple::ELF;
 
   case Triple::mipsel:
@@ -1849,6 +1857,7 @@ Triple Triple::get32BitArchVariant() const {
   case Triple::x86:
   case Triple::xcore:
   case Triple::xtensa:
+  case Triple::cpu0:
     // Already 32-bit.
     break;
 
@@ -2004,6 +2013,8 @@ Triple Triple::getBigEndianArchVariant() const {
   case Triple::ve:
   case Triple::csky:
   case Triple::xtensa:
+  case Triple::cpu0:
+  case Triple::cpu0el:
 
   // ARM is intentionally unsupported here, changing the architecture would
   // drop any arch suffixes.
@@ -2125,6 +2136,7 @@ bool Triple::isLittleEndian() const {
   case Triple::x86_64:
   case Triple::xcore:
   case Triple::xtensa:
+  case Triple::cpu0el:
     return true;
   default:
     return false;
