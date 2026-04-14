@@ -1843,11 +1843,21 @@ let Predicates = [HasStdExtP] in {
   def : PatGprGpr<riscv_asub, PASUB_B, XLenVecI8VT>;
   def : PatGprGpr<riscv_asubu, PASUBU_B, XLenVecI8VT>;
 
+  def : PatGprGpr<int_riscv_paadd, PAADD_B, XLenVecI8VT>;
+  def : PatGprGpr<int_riscv_paaddu, PAADDU_B, XLenVecI8VT>;
+  def : PatGprGpr<int_riscv_pasub, PASUB_B, XLenVecI8VT>;
+  def : PatGprGpr<int_riscv_pasubu, PASUBU_B, XLenVecI8VT>;
+
   // 16-bit averaging patterns
   def : PatGprGpr<avgfloors, PAADD_H, XLenVecI16VT>;
   def : PatGprGpr<avgflooru, PAADDU_H, XLenVecI16VT>;
   def : PatGprGpr<riscv_asub, PASUB_H, XLenVecI16VT>;
   def : PatGprGpr<riscv_asubu, PASUBU_H, XLenVecI16VT>;
+
+  def : PatGprGpr<int_riscv_paadd, PAADD_H, XLenVecI16VT>;
+  def : PatGprGpr<int_riscv_paaddu, PAADDU_H, XLenVecI16VT>;
+  def : PatGprGpr<int_riscv_pasub, PASUB_H, XLenVecI16VT>;
+  def : PatGprGpr<int_riscv_pasubu, PASUBU_H, XLenVecI16VT>;
 
   // 8-bit absolute difference patterns
   def : Pat<(XLenVecI8VT (abs GPR:$rs1)), (PABD_B GPR:$rs1, (XLenVecI8VT X0))>;
@@ -2003,6 +2013,7 @@ let Predicates = [HasStdExtP, IsRV32] in {
   // Build vector patterns
   def : Pat<(v2i16 (build_vector (XLenVT GPR:$a), (XLenVT GPR:$b))),
             (PACK GPR:$a, GPR:$b)>;
+
 } // Predicates = [HasStdExtP, IsRV32]
 
 let Predicates = [HasStdExtP, IsRV64] in {
@@ -2060,9 +2071,15 @@ let Predicates = [HasStdExtP, IsRV64] in {
   def : PatGprGpr<avgfloors, PAADD_W, v2i32>;
   def : PatGprGpr<avgflooru, PAADDU_W, v2i32>;
 
+  def : PatGprGpr<int_riscv_paadd, PAADD_W, v2i32>;
+  def : PatGprGpr<int_riscv_paaddu, PAADDU_W, v2i32>;
+
   // 32-bit averaging-sub patterns
   def : PatGprGpr<riscv_asub, PASUB_W, v2i32>;
   def : PatGprGpr<riscv_asubu, PASUBU_W, v2i32>;
+
+  def : PatGprGpr<int_riscv_pasub, PASUB_W, v2i32>;
+  def : PatGprGpr<int_riscv_pasubu, PASUBU_W, v2i32>;
 
   // 32-bit multiply high patterns
   def : PatGprGpr<mulhs, PMULH_W, v2i32>;
@@ -2151,4 +2168,5 @@ let Predicates = [HasStdExtP, IsRV64] in {
 
   def : Pat<(v2i32 (build_vector (XLenVT GPR:$a), (XLenVT GPR:$b))),
             (PACK GPR:$a, GPR:$b)>;
+
 } // Predicates = [HasStdExtP, IsRV64]

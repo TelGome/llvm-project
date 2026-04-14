@@ -1991,6 +1991,28 @@ let TargetPrefix = "riscv" in
 def int_riscv_pause : DefaultAttrsIntrinsic<[], [], [IntrNoMem, IntrHasSideEffects]>;
 
 
+// Packed SIMD extensions : Packed Averaging Addition and Subtraction
+//===----------------------------------------------------------------------===//
+let TargetPrefix = "riscv" in {
+//class RVPBinaryIntrinsics
+//    : DefaultAttrsIntrinsic<[llvm_any_ty ty],
+//                            [LLVMMatchType<1>, LLVMMatchType<1>],
+//                            [IntrNoMem, IntrSpeculatable]>;
+
+  def int_riscv_paadd : Intrinsic<[llvm_anyvector_ty],
+                                        [LLVMMatchType<0>, LLVMMatchType<0>],
+                                        [IntrNoMem, IntrSpeculatable]>;
+  def int_riscv_paaddu : Intrinsic<[llvm_anyvector_ty],
+                                        [LLVMMatchType<0>, LLVMMatchType<0>],
+                                        [IntrNoMem, IntrSpeculatable]>;
+  def int_riscv_pasub : Intrinsic<[llvm_anyvector_ty],
+                                        [LLVMMatchType<0>, LLVMMatchType<0>],
+                                        [IntrNoMem, IntrSpeculatable]>;
+  def int_riscv_pasubu : Intrinsic<[llvm_anyvector_ty],
+                                        [LLVMMatchType<0>, LLVMMatchType<0>],
+                                        [IntrNoMem, IntrSpeculatable]>;
+} // TargetPrefix = "riscv"
+
 //===----------------------------------------------------------------------===//
 // Zvfofp8min - OFP8 conversion extension
 // The Zvfofp8min extension provides basic support for the two 8-bit
