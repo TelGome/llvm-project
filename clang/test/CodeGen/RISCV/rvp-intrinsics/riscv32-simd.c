@@ -99,3 +99,73 @@ uint8x4_t test_pasubu_u8x4(uint8x4_t rs1, uint8x4_t rs2) {
 uint16x2_t test_pasubu_u16x2(uint16x2_t rs1, uint16x2_t rs2) {
   return __riscv_pasubu_u16x2(rs1, rs2);
 }
+
+// RV32P-LABEL: @test_pabs_i8x4(
+// RV32P-NEXT:  entry:
+// RV32P-NEXT:    [[TMP0:%.*]] = bitcast i32 [[RS1_COERCE:%.*]] to <4 x i8>
+// RV32P-NEXT:    [[TMP1:%.*]] = tail call <4 x i8> @llvm.riscv.pabs.v4i8(<4 x i8> [[TMP0]])
+// RV32P-NEXT:    [[TMP2:%.*]] = bitcast <4 x i8> [[TMP1]] to i32
+// RV32P-NEXT:    ret i32 [[TMP2]]
+//
+uint8x4_t test_pabs_i8x4(int8x4_t rs1) {
+  return __riscv_pabs_i8x4(rs1);
+}
+
+// RV32P-LABEL: @test_pabs_i16x2(
+// RV32P-NEXT:  entry:
+// RV32P-NEXT:    [[TMP0:%.*]] = bitcast i32 [[RS1_COERCE:%.*]] to <2 x i16>
+// RV32P-NEXT:    [[TMP1:%.*]] = tail call <2 x i16> @llvm.riscv.pabs.v2i16(<2 x i16> [[TMP0]])
+// RV32P-NEXT:    [[TMP2:%.*]] = bitcast <2 x i16> [[TMP1]] to i32
+// RV32P-NEXT:    ret i32 [[TMP2]]
+//
+uint16x2_t test_pabs_i16x2(int16x2_t rs1) {
+  return __riscv_pabs_i16x2(rs1);
+}
+
+// RV32P-LABEL: @test_pabd_i8x4(
+// RV32P-NEXT:  entry:
+// RV32P-NEXT:    [[TMP0:%.*]] = bitcast i32 [[RS1_COERCE:%.*]] to <4 x i8>
+// RV32P-NEXT:    [[TMP1:%.*]] = bitcast i32 [[RS2_COERCE:%.*]] to <4 x i8>
+// RV32P-NEXT:    [[TMP2:%.*]] = tail call <4 x i8> @llvm.riscv.pabd.v4i8(<4 x i8> [[TMP0]], <4 x i8> [[TMP1]])
+// RV32P-NEXT:    [[TMP3:%.*]] = bitcast <4 x i8> [[TMP2]] to i32
+// RV32P-NEXT:    ret i32 [[TMP3]]
+//
+uint8x4_t test_pabd_i8x4(int8x4_t rs1, int8x4_t rs2) {
+  return __riscv_pabd_i8x4(rs1, rs2);
+}
+
+// RV32P-LABEL: @test_pabd_i16x2(
+// RV32P-NEXT:  entry:
+// RV32P-NEXT:    [[TMP0:%.*]] = bitcast i32 [[RS1_COERCE:%.*]] to <2 x i16>
+// RV32P-NEXT:    [[TMP1:%.*]] = bitcast i32 [[RS2_COERCE:%.*]] to <2 x i16>
+// RV32P-NEXT:    [[TMP2:%.*]] = tail call <2 x i16> @llvm.riscv.pabd.v2i16(<2 x i16> [[TMP0]], <2 x i16> [[TMP1]])
+// RV32P-NEXT:    [[TMP3:%.*]] = bitcast <2 x i16> [[TMP2]] to i32
+// RV32P-NEXT:    ret i32 [[TMP3]]
+//
+uint16x2_t test_pabd_i16x2(int16x2_t rs1, int16x2_t rs2) {
+  return __riscv_pabd_i16x2(rs1, rs2);
+}
+
+// RV32P-LABEL: @test_pabdu_u8x4(
+// RV32P-NEXT:  entry:
+// RV32P-NEXT:    [[TMP0:%.*]] = bitcast i32 [[RS1_COERCE:%.*]] to <4 x i8>
+// RV32P-NEXT:    [[TMP1:%.*]] = bitcast i32 [[RS2_COERCE:%.*]] to <4 x i8>
+// RV32P-NEXT:    [[TMP2:%.*]] = tail call <4 x i8> @llvm.riscv.pabdu.v4i8(<4 x i8> [[TMP0]], <4 x i8> [[TMP1]])
+// RV32P-NEXT:    [[TMP3:%.*]] = bitcast <4 x i8> [[TMP2]] to i32
+// RV32P-NEXT:    ret i32 [[TMP3]]
+//
+uint8x4_t test_pabdu_u8x4(uint8x4_t rs1, uint8x4_t rs2) {
+  return __riscv_pabdu_u8x4(rs1, rs2);
+}
+
+// RV32P-LABEL: @test_pabdu_u16x2(
+// RV32P-NEXT:  entry:
+// RV32P-NEXT:    [[TMP0:%.*]] = bitcast i32 [[RS1_COERCE:%.*]] to <2 x i16>
+// RV32P-NEXT:    [[TMP1:%.*]] = bitcast i32 [[RS2_COERCE:%.*]] to <2 x i16>
+// RV32P-NEXT:    [[TMP2:%.*]] = tail call <2 x i16> @llvm.riscv.pabdu.v2i16(<2 x i16> [[TMP0]], <2 x i16> [[TMP1]])
+// RV32P-NEXT:    [[TMP3:%.*]] = bitcast <2 x i16> [[TMP2]] to i32
+// RV32P-NEXT:    ret i32 [[TMP3]]
+//
+uint16x2_t test_pabdu_u16x2(uint16x2_t rs1, uint16x2_t rs2) {
+  return __riscv_pabdu_u16x2(rs1, rs2);
+}

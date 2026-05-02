@@ -40,8 +40,8 @@ entry:
 
 declare <8 x i8> @llvm.riscv.paaddu.v8i8(<8 x i8>, <8 x i8>)
 
-define <8 x i8> @paaddu_i8x8(<8 x i8> %a, <8 x i8> %b) {
-; RV64P-LABEL: paaddu_i8x8:
+define <8 x i8> @paaddu_u8x8(<8 x i8> %a, <8 x i8> %b) {
+; RV64P-LABEL: paaddu_u8x8:
 ; RV64P:       # %bb.0: # %entry
 ; RV64P-NEXT:    paaddu.b a0, a0, a1
 ; RV64P-NEXT:    ret
@@ -52,8 +52,8 @@ entry:
 
 declare <4 x i16> @llvm.riscv.paaddu.v4i16(<4 x i16>, <4 x i16>)
 
-define <4 x i16> @paaddu_i16x4(<4 x i16> %a, <4 x i16> %b) {
-; RV64P-LABEL: paaddu_i16x4:
+define <4 x i16> @paaddu_u16x4(<4 x i16> %a, <4 x i16> %b) {
+; RV64P-LABEL: paaddu_u16x4:
 ; RV64P:       # %bb.0: # %entry
 ; RV64P-NEXT:    paaddu.h a0, a0, a1
 ; RV64P-NEXT:    ret
@@ -64,12 +64,156 @@ entry:
 
 declare <2 x i32> @llvm.riscv.paaddu.v2i32(<2 x i32>, <2 x i32>)
 
-define <2 x i32> @paaddu_i32x2(<2 x i32> %a, <2 x i32> %b) {
-; RV64P-LABEL: paaddu_i32x2:
+define <2 x i32> @paaddu_u32x2(<2 x i32> %a, <2 x i32> %b) {
+; RV64P-LABEL: paaddu_u32x2:
 ; RV64P:       # %bb.0: # %entry
 ; RV64P-NEXT:    paaddu.w a0, a0, a1
 ; RV64P-NEXT:    ret
 entry:
   %tmp = call <2 x i32> @llvm.riscv.paaddu.v2i32(<2 x i32> %a, <2 x i32> %b)
   ret <2 x i32> %tmp
+}
+
+declare <8 x i8>  @llvm.riscv.pasub.v8i8(<8 x i8>, <8 x i8>)
+
+define <8 x i8> @pasub_i8x8(<8 x i8> %a, <8 x i8> %b) {
+; RV64P-LABEL: pasub_i8x8:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    pasub.b a0, a0, a1
+; RV64P-NEXT:    ret
+entry:
+  %tmp = call <8 x i8> @llvm.riscv.pasub.v8i8(<8 x i8> %a, <8 x i8> %b)
+  ret <8 x i8> %tmp
+}
+
+declare <4 x i16> @llvm.riscv.pasub.v4i16(<4 x i16>, <4 x i16>)
+
+define <4 x i16> @pasub_i16x4(<4 x i16> %a, <4 x i16> %b) {
+; RV64P-LABEL: pasub_i16x4:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    pasub.h a0, a0, a1
+; RV64P-NEXT:    ret
+entry:
+  %tmp = call <4 x i16> @llvm.riscv.pasub.v4i16(<4 x i16> %a, <4 x i16> %b)
+  ret <4 x i16> %tmp
+}
+
+declare <2 x i32> @llvm.riscv.pasub.v2i32(<2 x i32>, <2 x i32>)
+
+define <2 x i32> @pasub_i32x2(<2 x i32> %a, <2 x i32> %b) {
+; RV64P-LABEL: pasub_i32x2:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    pasub.w a0, a0, a1
+; RV64P-NEXT:    ret
+entry:
+  %tmp = call <2 x i32> @llvm.riscv.pasub.v2i32(<2 x i32> %a, <2 x i32> %b)
+  ret <2 x i32> %tmp
+}
+
+declare <8 x i8>  @llvm.riscv.pasubu.v8i8(<8 x i8>, <8 x i8>)
+
+define <8 x i8> @pasubu_u8x8(<8 x i8> %a, <8 x i8> %b) {
+; RV64P-LABEL: pasubu_u8x8:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    pasubu.b a0, a0, a1
+; RV64P-NEXT:    ret
+entry:
+  %tmp = call <8 x i8> @llvm.riscv.pasubu.v8i8(<8 x i8> %a, <8 x i8> %b)
+  ret <8 x i8> %tmp
+}
+
+declare <4 x i16> @llvm.riscv.pasubu.v4i16(<4 x i16>, <4 x i16>)
+
+define <4 x i16> @pasubu_u16x4(<4 x i16> %a, <4 x i16> %b) {
+; RV64P-LABEL: pasubu_u16x4:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    pasubu.h a0, a0, a1
+; RV64P-NEXT:    ret
+entry:
+  %tmp = call <4 x i16> @llvm.riscv.pasubu.v4i16(<4 x i16> %a, <4 x i16> %b)
+  ret <4 x i16> %tmp
+}
+
+declare <2 x i32> @llvm.riscv.pasubu.v2i32(<2 x i32>, <2 x i32>)
+
+define <2 x i32> @pasubu_u32x2(<2 x i32> %a, <2 x i32> %b) {
+; RV64P-LABEL: pasubu_u32x2:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    pasubu.w a0, a0, a1
+; RV64P-NEXT:    ret
+entry:
+  %tmp = call <2 x i32> @llvm.riscv.pasubu.v2i32(<2 x i32> %a, <2 x i32> %b)
+  ret <2 x i32> %tmp
+}
+
+declare <8 x i8>  @llvm.riscv.pabs.v8i8(<8 x i8>)
+
+define <8 x i8> @pabs_i8x8(<8 x i8> %a) {
+; RV64P-LABEL: pabs_i8x8:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    pabd.b a0, a0, zero
+; RV64P-NEXT:    ret
+entry:
+  %tmp = call <8 x i8> @llvm.riscv.pabs.v8i8(<8 x i8> %a)
+  ret <8 x i8> %tmp
+}
+
+declare <4 x i16> @llvm.riscv.pabs.v4i16(<4 x i16>)
+
+define <4 x i16> @pabs_i16x4(<4 x i16> %a) {
+; RV64P-LABEL: pabs_i16x4:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    pabd.h a0, a0, zero
+; RV64P-NEXT:    ret
+entry:
+  %tmp = call <4 x i16> @llvm.riscv.pabs.v4i16(<4 x i16> %a)
+  ret <4 x i16> %tmp
+}
+
+declare <8 x i8>  @llvm.riscv.pabd.v8i8(<8 x i8>, <8 x i8>)
+
+define <8 x i8> @pabd_i8x8(<8 x i8> %a, <8 x i8> %b) {
+; RV64P-LABEL: pabd_i8x8:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    pabd.b a0, a0, a1
+; RV64P-NEXT:    ret
+entry:
+  %tmp = call <8 x i8> @llvm.riscv.pabd.v8i8(<8 x i8> %a, <8 x i8> %b)
+  ret <8 x i8> %tmp
+}
+
+declare <4 x i16> @llvm.riscv.pabd.v4i16(<4 x i16>, <4 x i16>)
+
+define <4 x i16> @pabd_i16x4(<4 x i16> %a, <4 x i16> %b) {
+; RV64P-LABEL: pabd_i16x4:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    pabd.h a0, a0, a1
+; RV64P-NEXT:    ret
+entry:
+  %tmp = call <4 x i16> @llvm.riscv.pabd.v4i16(<4 x i16> %a, <4 x i16> %b)
+  ret <4 x i16> %tmp
+}
+
+declare <8 x i8>  @llvm.riscv.pabdu.v8i8(<8 x i8>, <8 x i8>)
+
+define <8 x i8> @pabdu_u8x8(<8 x i8> %a, <8 x i8> %b) {
+; RV64P-LABEL: pabdu_u8x8:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    pabdu.b a0, a0, a1
+; RV64P-NEXT:    ret
+entry:
+  %tmp = call <8 x i8> @llvm.riscv.pabdu.v8i8(<8 x i8> %a, <8 x i8> %b)
+  ret <8 x i8> %tmp
+}
+
+declare <4 x i16> @llvm.riscv.pabdu.v4i16(<4 x i16>, <4 x i16>)
+
+define <4 x i16> @pabdu_u16x4(<4 x i16> %a, <4 x i16> %b) {
+; RV64P-LABEL: pabdu_u16x4:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    pabdu.h a0, a0, a1
+; RV64P-NEXT:    ret
+entry:
+  %tmp = call <4 x i16> @llvm.riscv.pabdu.v4i16(<4 x i16> %a, <4 x i16> %b)
+  ret <4 x i16> %tmp
 }

@@ -1226,6 +1226,27 @@ Value *CodeGenFunction::EmitRISCVBuiltinExpr(unsigned BuiltinID,
     IntrinsicTypes = {ResultType};
     ID = Intrinsic::riscv_pasubu;
     break;
+  case RISCV::BI__builtin_riscv_pabs_i8x4:
+  case RISCV::BI__builtin_riscv_pabs_i16x2:
+  case RISCV::BI__builtin_riscv_pabs_i8x8:
+  case RISCV::BI__builtin_riscv_pabs_i16x4:
+    IntrinsicTypes = {ResultType};
+    ID = Intrinsic::riscv_pabs;
+    break;
+  case RISCV::BI__builtin_riscv_pabd_i8x4:
+  case RISCV::BI__builtin_riscv_pabd_i16x2:
+  case RISCV::BI__builtin_riscv_pabd_i8x8:
+  case RISCV::BI__builtin_riscv_pabd_i16x4:
+    IntrinsicTypes = {ResultType};
+    ID = Intrinsic::riscv_pabd;
+    break;
+  case RISCV::BI__builtin_riscv_pabdu_u8x4:
+  case RISCV::BI__builtin_riscv_pabdu_u16x2:
+  case RISCV::BI__builtin_riscv_pabdu_u8x8:
+  case RISCV::BI__builtin_riscv_pabdu_u16x4:
+    IntrinsicTypes = {ResultType};
+    ID = Intrinsic::riscv_pabdu;
+    break;
 
   // Zk builtins
 
