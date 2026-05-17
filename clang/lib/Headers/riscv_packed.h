@@ -79,6 +79,13 @@ typedef uint32_t uint32x2_t __attribute__((__vector_size__(8), __aligned__(8)));
     return op __rs1;                                                           \
   }
 
+#define __packed_merge(name, ty, mask_ty)                                      \
+  static __inline__ ty __DEFAULT_FN_ATTRS                                      \
+  __riscv_##name(ty __rs1, ty __rs2, mask_ty __rd) {                           \
+    ty __mask = (ty)__rd;                                                      \
+    return (__rs1 & ~__mask) | (__rs2 & __mask);                               \
+  }
+
 #define __packed_minmax(name, ty, builtin)                                     \
   static __inline__ ty __DEFAULT_FN_ATTRS                                      \
   __riscv_##name(ty __rs1, ty __rs2) {                                         \
@@ -240,6 +247,18 @@ __packed_unary_op(pnot_u16x4, uint16x4_t, ~)
 __packed_unary_op(pnot_i32x2, int32x2_t, ~)
 __packed_unary_op(pnot_u32x2, uint32x2_t, ~)
 
+/* Packed Merge */
+__packed_merge(pmerge_u8x4, uint8x4_t, uint8x4_t)
+__packed_merge(pmerge_i8x4, int8x4_t, uint8x4_t)
+__packed_merge(pmerge_u16x2, uint16x2_t, uint16x2_t)
+__packed_merge(pmerge_i16x2, int16x2_t, uint16x2_t)
+__packed_merge(pmerge_u8x8, uint8x8_t, uint8x8_t)
+__packed_merge(pmerge_i8x8, int8x8_t, uint8x8_t)
+__packed_merge(pmerge_u16x4, uint16x4_t, uint16x4_t)
+__packed_merge(pmerge_i16x4, int16x4_t, uint16x4_t)
+__packed_merge(pmerge_u32x2, uint32x2_t, uint32x2_t)
+__packed_merge(pmerge_i32x2, int32x2_t, uint32x2_t)
+
 #if __riscv_xlen == 32
 __packed_binary(paadd_i8x4, int8x4_t, int8x4_t)
 __packed_binary(paadd_i16x2, int16x2_t, int16x2_t)
@@ -280,6 +299,7 @@ __packed_binary(pabd_i8x8, uint8x8_t, int8x8_t)
 __packed_binary(pabd_i16x4, uint16x4_t, int16x4_t)
 __packed_binary(pabdu_u8x8, uint8x8_t, uint8x8_t)
 __packed_binary(pabdu_u16x4, uint16x4_t, uint16x4_t)
+
 #endif
 
 
@@ -294,6 +314,7 @@ __packed_binary(pabdu_u16x4, uint16x4_t, uint16x4_t)
 #undef __packed_scalar_binary_op
 #undef __packed_binary_op
 #undef __packed_unary_op
+#undef __packed_merge
 #undef __packed_minmax
 #undef __packed_unary
 #undef __packed_binary

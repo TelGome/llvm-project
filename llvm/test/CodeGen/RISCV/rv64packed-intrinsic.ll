@@ -2,6 +2,8 @@
 ; RUN: llc -mtriple=riscv64 -mattr=+experimental-p -verify-machineinstrs < %s \
 ; RUN:   | FileCheck %s -check-prefix=RV64P
 
+; Packed Averaging Addition and Subtraction
+
 declare <8 x i8>  @llvm.riscv.paadd.v8i8(<8 x i8>, <8 x i8>)
 
 define <8 x i8> @paadd_i8x8(<8 x i8> %a, <8 x i8> %b) {
@@ -146,6 +148,8 @@ entry:
   ret <2 x i32> %tmp
 }
 
+; Packed Absolute Value and Absolute Difference
+
 declare <8 x i8>  @llvm.riscv.pabs.v8i8(<8 x i8>)
 
 define <8 x i8> @pabs_i8x8(<8 x i8> %a) {
@@ -216,4 +220,136 @@ define <4 x i16> @pabdu_u16x4(<4 x i16> %a, <4 x i16> %b) {
 entry:
   %tmp = call <4 x i16> @llvm.riscv.pabdu.v4i16(<4 x i16> %a, <4 x i16> %b)
   ret <4 x i16> %tmp
+}
+
+; Packed merge
+
+define <4 x i8> @pmerge_u8x4(<4 x i8> %a, <4 x i8> %b, <4 x i8> %m) {
+; RV64P-LABEL: pmerge_u8x4:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    mvm a0, a1, a2
+; RV64P-NEXT:    ret
+entry:
+  %nm = xor <4 x i8> %m, <i8 -1, i8 -1, i8 -1, i8 -1>
+  %x = and <4 x i8> %a, %nm
+  %y = and <4 x i8> %b, %m
+  %r = or <4 x i8> %x, %y
+  ret <4 x i8> %r
+}
+
+define <4 x i8> @pmerge_i8x4(<4 x i8> %a, <4 x i8> %b, <4 x i8> %m) {
+; RV64P-LABEL: pmerge_i8x4:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    mvm a0, a1, a2
+; RV64P-NEXT:    ret
+entry:
+  %nm = xor <4 x i8> %m, <i8 -1, i8 -1, i8 -1, i8 -1>
+  %x = and <4 x i8> %a, %nm
+  %y = and <4 x i8> %b, %m
+  %r = or <4 x i8> %x, %y
+  ret <4 x i8> %r
+}
+
+define <2 x i16> @pmerge_u16x2(<2 x i16> %a, <2 x i16> %b, <2 x i16> %m) {
+; RV64P-LABEL: pmerge_u16x2:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    mvm a0, a1, a2
+; RV64P-NEXT:    ret
+entry:
+  %nm = xor <2 x i16> %m, <i16 -1, i16 -1>
+  %x = and <2 x i16> %a, %nm
+  %y = and <2 x i16> %b, %m
+  %r = or <2 x i16> %x, %y
+  ret <2 x i16> %r
+}
+
+define <2 x i16> @pmerge_i16x2(<2 x i16> %a, <2 x i16> %b, <2 x i16> %m) {
+; RV64P-LABEL: pmerge_i16x2:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    mvm a0, a1, a2
+; RV64P-NEXT:    ret
+entry:
+  %nm = xor <2 x i16> %m, <i16 -1, i16 -1>
+  %x = and <2 x i16> %a, %nm
+  %y = and <2 x i16> %b, %m
+  %r = or <2 x i16> %x, %y
+  ret <2 x i16> %r
+}
+
+define <8 x i8> @pmerge_u8x8(<8 x i8> %a, <8 x i8> %b, <8 x i8> %m) {
+; RV64P-LABEL: pmerge_u8x8:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    mvm a0, a1, a2
+; RV64P-NEXT:    ret
+entry:
+  %nm = xor <8 x i8> %m, <i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+  %x = and <8 x i8> %a, %nm
+  %y = and <8 x i8> %b, %m
+  %r = or <8 x i8> %x, %y
+  ret <8 x i8> %r
+}
+
+define <8 x i8> @pmerge_i8x8(<8 x i8> %a, <8 x i8> %b, <8 x i8> %m) {
+; RV64P-LABEL: pmerge_i8x8:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    mvm a0, a1, a2
+; RV64P-NEXT:    ret
+entry:
+  %nm = xor <8 x i8> %m, <i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
+  %x = and <8 x i8> %a, %nm
+  %y = and <8 x i8> %b, %m
+  %r = or <8 x i8> %x, %y
+  ret <8 x i8> %r
+}
+
+define <4 x i16> @pmerge_u16x4(<4 x i16> %a, <4 x i16> %b, <4 x i16> %m) {
+; RV64P-LABEL: pmerge_u16x4:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    mvm a0, a1, a2
+; RV64P-NEXT:    ret
+entry:
+  %nm = xor <4 x i16> %m, <i16 -1, i16 -1, i16 -1, i16 -1>
+  %x = and <4 x i16> %a, %nm
+  %y = and <4 x i16> %b, %m
+  %r = or <4 x i16> %x, %y
+  ret <4 x i16> %r
+}
+
+define <4 x i16> @pmerge_i16x4(<4 x i16> %a, <4 x i16> %b, <4 x i16> %m) {
+; RV64P-LABEL: pmerge_i16x4:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    mvm a0, a1, a2
+; RV64P-NEXT:    ret
+entry:
+  %nm = xor <4 x i16> %m, <i16 -1, i16 -1, i16 -1, i16 -1>
+  %x = and <4 x i16> %a, %nm
+  %y = and <4 x i16> %b, %m
+  %r = or <4 x i16> %x, %y
+  ret <4 x i16> %r
+}
+
+define <2 x i32> @pmerge_u32x2(<2 x i32> %a, <2 x i32> %b, <2 x i32> %m) {
+; RV64P-LABEL: pmerge_u32x2:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    mvm a0, a1, a2
+; RV64P-NEXT:    ret
+entry:
+  %nm = xor <2 x i32> %m, <i32 -1, i32 -1>
+  %x = and <2 x i32> %a, %nm
+  %y = and <2 x i32> %b, %m
+  %r = or <2 x i32> %x, %y
+  ret <2 x i32> %r
+}
+
+define <2 x i32> @pmerge_i32x2(<2 x i32> %a, <2 x i32> %b, <2 x i32> %m) {
+; RV64P-LABEL: pmerge_i32x2:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    mvm a0, a1, a2
+; RV64P-NEXT:    ret
+entry:
+  %nm = xor <2 x i32> %m, <i32 -1, i32 -1>
+  %x = and <2 x i32> %a, %nm
+  %y = and <2 x i32> %b, %m
+  %r = or <2 x i32> %x, %y
+  ret <2 x i32> %r
 }

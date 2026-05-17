@@ -2683,3 +2683,308 @@ int32x2_t test_pnot_i32x2(int32x2_t a) {
 uint32x2_t test_pnot_u32x2(uint32x2_t a) {
   return __riscv_pnot_u32x2(a);
 }
+
+/* Packed Merge (32-bit) */
+
+// RV32-LABEL: define dso_local i32 @test_pmerge_u8x4(
+// RV32-SAME: i32 noundef [[A_COERCE:%.*]], i32 noundef [[B_COERCE:%.*]], i32 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = bitcast i32 [[A_COERCE]] to <4 x i8>
+// RV32-NEXT:    [[TMP1:%.*]] = bitcast i32 [[M_COERCE]] to <4 x i8>
+// RV32-NEXT:    [[NOT_I:%.*]] = xor <4 x i8> [[TMP1]], splat (i8 -1)
+// RV32-NEXT:    [[AND_I:%.*]] = and <4 x i8> [[TMP0]], [[NOT_I]]
+// RV32-NEXT:    [[AND4_I2:%.*]] = and i32 [[B_COERCE]], [[M_COERCE]]
+// RV32-NEXT:    [[AND4_I:%.*]] = bitcast i32 [[AND4_I2]] to <4 x i8>
+// RV32-NEXT:    [[OR_I:%.*]] = or <4 x i8> [[AND_I]], [[AND4_I]]
+// RV32-NEXT:    [[TMP2:%.*]] = bitcast <4 x i8> [[OR_I]] to i32
+// RV32-NEXT:    ret i32 [[TMP2]]
+//
+// RV64-LABEL: define dso_local i32 @test_pmerge_u8x4(
+// RV64-SAME: i32 noundef [[A_COERCE:%.*]], i32 noundef [[B_COERCE:%.*]], i32 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i32 [[A_COERCE]] to <4 x i8>
+// RV64-NEXT:    [[TMP1:%.*]] = bitcast i32 [[M_COERCE]] to <4 x i8>
+// RV64-NEXT:    [[NOT_I:%.*]] = xor <4 x i8> [[TMP1]], splat (i8 -1)
+// RV64-NEXT:    [[AND_I:%.*]] = and <4 x i8> [[TMP0]], [[NOT_I]]
+// RV64-NEXT:    [[AND4_I2:%.*]] = and i32 [[B_COERCE]], [[M_COERCE]]
+// RV64-NEXT:    [[AND4_I:%.*]] = bitcast i32 [[AND4_I2]] to <4 x i8>
+// RV64-NEXT:    [[OR_I:%.*]] = or <4 x i8> [[AND_I]], [[AND4_I]]
+// RV64-NEXT:    [[TMP2:%.*]] = bitcast <4 x i8> [[OR_I]] to i32
+// RV64-NEXT:    ret i32 [[TMP2]]
+//
+uint8x4_t test_pmerge_u8x4(uint8x4_t a, uint8x4_t b, uint8x4_t m) {
+  return __riscv_pmerge_u8x4(a, b, m);
+}
+
+// RV32-LABEL: define dso_local i32 @test_pmerge_i8x4(
+// RV32-SAME: i32 noundef [[A_COERCE:%.*]], i32 noundef [[B_COERCE:%.*]], i32 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = bitcast i32 [[A_COERCE]] to <4 x i8>
+// RV32-NEXT:    [[TMP1:%.*]] = bitcast i32 [[M_COERCE]] to <4 x i8>
+// RV32-NEXT:    [[NOT_I:%.*]] = xor <4 x i8> [[TMP1]], splat (i8 -1)
+// RV32-NEXT:    [[AND_I:%.*]] = and <4 x i8> [[TMP0]], [[NOT_I]]
+// RV32-NEXT:    [[AND4_I2:%.*]] = and i32 [[B_COERCE]], [[M_COERCE]]
+// RV32-NEXT:    [[AND4_I:%.*]] = bitcast i32 [[AND4_I2]] to <4 x i8>
+// RV32-NEXT:    [[OR_I:%.*]] = or <4 x i8> [[AND_I]], [[AND4_I]]
+// RV32-NEXT:    [[TMP2:%.*]] = bitcast <4 x i8> [[OR_I]] to i32
+// RV32-NEXT:    ret i32 [[TMP2]]
+//
+// RV64-LABEL: define dso_local i32 @test_pmerge_i8x4(
+// RV64-SAME: i32 noundef [[A_COERCE:%.*]], i32 noundef [[B_COERCE:%.*]], i32 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i32 [[A_COERCE]] to <4 x i8>
+// RV64-NEXT:    [[TMP1:%.*]] = bitcast i32 [[M_COERCE]] to <4 x i8>
+// RV64-NEXT:    [[NOT_I:%.*]] = xor <4 x i8> [[TMP1]], splat (i8 -1)
+// RV64-NEXT:    [[AND_I:%.*]] = and <4 x i8> [[TMP0]], [[NOT_I]]
+// RV64-NEXT:    [[AND4_I2:%.*]] = and i32 [[B_COERCE]], [[M_COERCE]]
+// RV64-NEXT:    [[AND4_I:%.*]] = bitcast i32 [[AND4_I2]] to <4 x i8>
+// RV64-NEXT:    [[OR_I:%.*]] = or <4 x i8> [[AND_I]], [[AND4_I]]
+// RV64-NEXT:    [[TMP2:%.*]] = bitcast <4 x i8> [[OR_I]] to i32
+// RV64-NEXT:    ret i32 [[TMP2]]
+//
+int8x4_t test_pmerge_i8x4(int8x4_t a, int8x4_t b, uint8x4_t m) {
+  return __riscv_pmerge_i8x4(a, b, m);
+}
+
+// RV32-LABEL: define dso_local i32 @test_pmerge_u16x2(
+// RV32-SAME: i32 noundef [[A_COERCE:%.*]], i32 noundef [[B_COERCE:%.*]], i32 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = bitcast i32 [[A_COERCE]] to <2 x i16>
+// RV32-NEXT:    [[TMP1:%.*]] = bitcast i32 [[M_COERCE]] to <2 x i16>
+// RV32-NEXT:    [[NOT_I:%.*]] = xor <2 x i16> [[TMP1]], splat (i16 -1)
+// RV32-NEXT:    [[AND_I:%.*]] = and <2 x i16> [[TMP0]], [[NOT_I]]
+// RV32-NEXT:    [[AND4_I2:%.*]] = and i32 [[B_COERCE]], [[M_COERCE]]
+// RV32-NEXT:    [[AND4_I:%.*]] = bitcast i32 [[AND4_I2]] to <2 x i16>
+// RV32-NEXT:    [[OR_I:%.*]] = or <2 x i16> [[AND_I]], [[AND4_I]]
+// RV32-NEXT:    [[TMP2:%.*]] = bitcast <2 x i16> [[OR_I]] to i32
+// RV32-NEXT:    ret i32 [[TMP2]]
+//
+// RV64-LABEL: define dso_local i32 @test_pmerge_u16x2(
+// RV64-SAME: i32 noundef [[A_COERCE:%.*]], i32 noundef [[B_COERCE:%.*]], i32 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i32 [[A_COERCE]] to <2 x i16>
+// RV64-NEXT:    [[TMP1:%.*]] = bitcast i32 [[M_COERCE]] to <2 x i16>
+// RV64-NEXT:    [[NOT_I:%.*]] = xor <2 x i16> [[TMP1]], splat (i16 -1)
+// RV64-NEXT:    [[AND_I:%.*]] = and <2 x i16> [[TMP0]], [[NOT_I]]
+// RV64-NEXT:    [[AND4_I2:%.*]] = and i32 [[B_COERCE]], [[M_COERCE]]
+// RV64-NEXT:    [[AND4_I:%.*]] = bitcast i32 [[AND4_I2]] to <2 x i16>
+// RV64-NEXT:    [[OR_I:%.*]] = or <2 x i16> [[AND_I]], [[AND4_I]]
+// RV64-NEXT:    [[TMP2:%.*]] = bitcast <2 x i16> [[OR_I]] to i32
+// RV64-NEXT:    ret i32 [[TMP2]]
+//
+uint16x2_t test_pmerge_u16x2(uint16x2_t a, uint16x2_t b, uint16x2_t m) {
+  return __riscv_pmerge_u16x2(a, b, m);
+}
+
+// RV32-LABEL: define dso_local i32 @test_pmerge_i16x2(
+// RV32-SAME: i32 noundef [[A_COERCE:%.*]], i32 noundef [[B_COERCE:%.*]], i32 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = bitcast i32 [[A_COERCE]] to <2 x i16>
+// RV32-NEXT:    [[TMP1:%.*]] = bitcast i32 [[M_COERCE]] to <2 x i16>
+// RV32-NEXT:    [[NOT_I:%.*]] = xor <2 x i16> [[TMP1]], splat (i16 -1)
+// RV32-NEXT:    [[AND_I:%.*]] = and <2 x i16> [[TMP0]], [[NOT_I]]
+// RV32-NEXT:    [[AND4_I2:%.*]] = and i32 [[B_COERCE]], [[M_COERCE]]
+// RV32-NEXT:    [[AND4_I:%.*]] = bitcast i32 [[AND4_I2]] to <2 x i16>
+// RV32-NEXT:    [[OR_I:%.*]] = or <2 x i16> [[AND_I]], [[AND4_I]]
+// RV32-NEXT:    [[TMP2:%.*]] = bitcast <2 x i16> [[OR_I]] to i32
+// RV32-NEXT:    ret i32 [[TMP2]]
+//
+// RV64-LABEL: define dso_local i32 @test_pmerge_i16x2(
+// RV64-SAME: i32 noundef [[A_COERCE:%.*]], i32 noundef [[B_COERCE:%.*]], i32 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i32 [[A_COERCE]] to <2 x i16>
+// RV64-NEXT:    [[TMP1:%.*]] = bitcast i32 [[M_COERCE]] to <2 x i16>
+// RV64-NEXT:    [[NOT_I:%.*]] = xor <2 x i16> [[TMP1]], splat (i16 -1)
+// RV64-NEXT:    [[AND_I:%.*]] = and <2 x i16> [[TMP0]], [[NOT_I]]
+// RV64-NEXT:    [[AND4_I2:%.*]] = and i32 [[B_COERCE]], [[M_COERCE]]
+// RV64-NEXT:    [[AND4_I:%.*]] = bitcast i32 [[AND4_I2]] to <2 x i16>
+// RV64-NEXT:    [[OR_I:%.*]] = or <2 x i16> [[AND_I]], [[AND4_I]]
+// RV64-NEXT:    [[TMP2:%.*]] = bitcast <2 x i16> [[OR_I]] to i32
+// RV64-NEXT:    ret i32 [[TMP2]]
+//
+int16x2_t test_pmerge_i16x2(int16x2_t a, int16x2_t b, uint16x2_t m) {
+  return __riscv_pmerge_i16x2(a, b, m);
+}
+
+/* Packed Merge (64-bit) */
+
+// RV32-LABEL: define dso_local i64 @test_pmerge_u8x8(
+// RV32-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B_COERCE:%.*]], i64 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <8 x i8>
+// RV32-NEXT:    [[TMP1:%.*]] = bitcast i64 [[M_COERCE]] to <8 x i8>
+// RV32-NEXT:    [[NOT_I:%.*]] = xor <8 x i8> [[TMP1]], splat (i8 -1)
+// RV32-NEXT:    [[AND_I:%.*]] = and <8 x i8> [[TMP0]], [[NOT_I]]
+// RV32-NEXT:    [[AND4_I2:%.*]] = and i64 [[B_COERCE]], [[M_COERCE]]
+// RV32-NEXT:    [[AND4_I:%.*]] = bitcast i64 [[AND4_I2]] to <8 x i8>
+// RV32-NEXT:    [[OR_I:%.*]] = or <8 x i8> [[AND_I]], [[AND4_I]]
+// RV32-NEXT:    [[TMP2:%.*]] = bitcast <8 x i8> [[OR_I]] to i64
+// RV32-NEXT:    ret i64 [[TMP2]]
+//
+// RV64-LABEL: define dso_local i64 @test_pmerge_u8x8(
+// RV64-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B_COERCE:%.*]], i64 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <8 x i8>
+// RV64-NEXT:    [[TMP1:%.*]] = bitcast i64 [[M_COERCE]] to <8 x i8>
+// RV64-NEXT:    [[NOT_I:%.*]] = xor <8 x i8> [[TMP1]], splat (i8 -1)
+// RV64-NEXT:    [[AND_I:%.*]] = and <8 x i8> [[TMP0]], [[NOT_I]]
+// RV64-NEXT:    [[AND4_I2:%.*]] = and i64 [[B_COERCE]], [[M_COERCE]]
+// RV64-NEXT:    [[AND4_I:%.*]] = bitcast i64 [[AND4_I2]] to <8 x i8>
+// RV64-NEXT:    [[OR_I:%.*]] = or <8 x i8> [[AND_I]], [[AND4_I]]
+// RV64-NEXT:    [[TMP2:%.*]] = bitcast <8 x i8> [[OR_I]] to i64
+// RV64-NEXT:    ret i64 [[TMP2]]
+//
+uint8x8_t test_pmerge_u8x8(uint8x8_t a, uint8x8_t b, uint8x8_t m) {
+  return __riscv_pmerge_u8x8(a, b, m);
+}
+
+// RV32-LABEL: define dso_local i64 @test_pmerge_i8x8(
+// RV32-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B_COERCE:%.*]], i64 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <8 x i8>
+// RV32-NEXT:    [[TMP1:%.*]] = bitcast i64 [[M_COERCE]] to <8 x i8>
+// RV32-NEXT:    [[NOT_I:%.*]] = xor <8 x i8> [[TMP1]], splat (i8 -1)
+// RV32-NEXT:    [[AND_I:%.*]] = and <8 x i8> [[TMP0]], [[NOT_I]]
+// RV32-NEXT:    [[AND4_I2:%.*]] = and i64 [[B_COERCE]], [[M_COERCE]]
+// RV32-NEXT:    [[AND4_I:%.*]] = bitcast i64 [[AND4_I2]] to <8 x i8>
+// RV32-NEXT:    [[OR_I:%.*]] = or <8 x i8> [[AND_I]], [[AND4_I]]
+// RV32-NEXT:    [[TMP2:%.*]] = bitcast <8 x i8> [[OR_I]] to i64
+// RV32-NEXT:    ret i64 [[TMP2]]
+//
+// RV64-LABEL: define dso_local i64 @test_pmerge_i8x8(
+// RV64-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B_COERCE:%.*]], i64 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <8 x i8>
+// RV64-NEXT:    [[TMP1:%.*]] = bitcast i64 [[M_COERCE]] to <8 x i8>
+// RV64-NEXT:    [[NOT_I:%.*]] = xor <8 x i8> [[TMP1]], splat (i8 -1)
+// RV64-NEXT:    [[AND_I:%.*]] = and <8 x i8> [[TMP0]], [[NOT_I]]
+// RV64-NEXT:    [[AND4_I2:%.*]] = and i64 [[B_COERCE]], [[M_COERCE]]
+// RV64-NEXT:    [[AND4_I:%.*]] = bitcast i64 [[AND4_I2]] to <8 x i8>
+// RV64-NEXT:    [[OR_I:%.*]] = or <8 x i8> [[AND_I]], [[AND4_I]]
+// RV64-NEXT:    [[TMP2:%.*]] = bitcast <8 x i8> [[OR_I]] to i64
+// RV64-NEXT:    ret i64 [[TMP2]]
+//
+int8x8_t test_pmerge_i8x8(int8x8_t a, int8x8_t b, uint8x8_t m) {
+  return __riscv_pmerge_i8x8(a, b, m);
+}
+
+// RV32-LABEL: define dso_local i64 @test_pmerge_u16x4(
+// RV32-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B_COERCE:%.*]], i64 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <4 x i16>
+// RV32-NEXT:    [[TMP1:%.*]] = bitcast i64 [[M_COERCE]] to <4 x i16>
+// RV32-NEXT:    [[NOT_I:%.*]] = xor <4 x i16> [[TMP1]], splat (i16 -1)
+// RV32-NEXT:    [[AND_I:%.*]] = and <4 x i16> [[TMP0]], [[NOT_I]]
+// RV32-NEXT:    [[AND4_I2:%.*]] = and i64 [[B_COERCE]], [[M_COERCE]]
+// RV32-NEXT:    [[AND4_I:%.*]] = bitcast i64 [[AND4_I2]] to <4 x i16>
+// RV32-NEXT:    [[OR_I:%.*]] = or <4 x i16> [[AND_I]], [[AND4_I]]
+// RV32-NEXT:    [[TMP2:%.*]] = bitcast <4 x i16> [[OR_I]] to i64
+// RV32-NEXT:    ret i64 [[TMP2]]
+//
+// RV64-LABEL: define dso_local i64 @test_pmerge_u16x4(
+// RV64-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B_COERCE:%.*]], i64 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <4 x i16>
+// RV64-NEXT:    [[TMP1:%.*]] = bitcast i64 [[M_COERCE]] to <4 x i16>
+// RV64-NEXT:    [[NOT_I:%.*]] = xor <4 x i16> [[TMP1]], splat (i16 -1)
+// RV64-NEXT:    [[AND_I:%.*]] = and <4 x i16> [[TMP0]], [[NOT_I]]
+// RV64-NEXT:    [[AND4_I2:%.*]] = and i64 [[B_COERCE]], [[M_COERCE]]
+// RV64-NEXT:    [[AND4_I:%.*]] = bitcast i64 [[AND4_I2]] to <4 x i16>
+// RV64-NEXT:    [[OR_I:%.*]] = or <4 x i16> [[AND_I]], [[AND4_I]]
+// RV64-NEXT:    [[TMP2:%.*]] = bitcast <4 x i16> [[OR_I]] to i64
+// RV64-NEXT:    ret i64 [[TMP2]]
+//
+uint16x4_t test_pmerge_u16x4(uint16x4_t a, uint16x4_t b, uint16x4_t m) {
+  return __riscv_pmerge_u16x4(a, b, m);
+}
+
+// RV32-LABEL: define dso_local i64 @test_pmerge_i16x4(
+// RV32-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B_COERCE:%.*]], i64 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <4 x i16>
+// RV32-NEXT:    [[TMP1:%.*]] = bitcast i64 [[M_COERCE]] to <4 x i16>
+// RV32-NEXT:    [[NOT_I:%.*]] = xor <4 x i16> [[TMP1]], splat (i16 -1)
+// RV32-NEXT:    [[AND_I:%.*]] = and <4 x i16> [[TMP0]], [[NOT_I]]
+// RV32-NEXT:    [[AND4_I2:%.*]] = and i64 [[B_COERCE]], [[M_COERCE]]
+// RV32-NEXT:    [[AND4_I:%.*]] = bitcast i64 [[AND4_I2]] to <4 x i16>
+// RV32-NEXT:    [[OR_I:%.*]] = or <4 x i16> [[AND_I]], [[AND4_I]]
+// RV32-NEXT:    [[TMP2:%.*]] = bitcast <4 x i16> [[OR_I]] to i64
+// RV32-NEXT:    ret i64 [[TMP2]]
+//
+// RV64-LABEL: define dso_local i64 @test_pmerge_i16x4(
+// RV64-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B_COERCE:%.*]], i64 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <4 x i16>
+// RV64-NEXT:    [[TMP1:%.*]] = bitcast i64 [[M_COERCE]] to <4 x i16>
+// RV64-NEXT:    [[NOT_I:%.*]] = xor <4 x i16> [[TMP1]], splat (i16 -1)
+// RV64-NEXT:    [[AND_I:%.*]] = and <4 x i16> [[TMP0]], [[NOT_I]]
+// RV64-NEXT:    [[AND4_I2:%.*]] = and i64 [[B_COERCE]], [[M_COERCE]]
+// RV64-NEXT:    [[AND4_I:%.*]] = bitcast i64 [[AND4_I2]] to <4 x i16>
+// RV64-NEXT:    [[OR_I:%.*]] = or <4 x i16> [[AND_I]], [[AND4_I]]
+// RV64-NEXT:    [[TMP2:%.*]] = bitcast <4 x i16> [[OR_I]] to i64
+// RV64-NEXT:    ret i64 [[TMP2]]
+//
+int16x4_t test_pmerge_i16x4(int16x4_t a, int16x4_t b, uint16x4_t m) {
+  return __riscv_pmerge_i16x4(a, b, m);
+}
+
+// RV32-LABEL: define dso_local i64 @test_pmerge_u32x2(
+// RV32-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B_COERCE:%.*]], i64 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <2 x i32>
+// RV32-NEXT:    [[TMP1:%.*]] = bitcast i64 [[M_COERCE]] to <2 x i32>
+// RV32-NEXT:    [[NOT_I:%.*]] = xor <2 x i32> [[TMP1]], splat (i32 -1)
+// RV32-NEXT:    [[AND_I:%.*]] = and <2 x i32> [[TMP0]], [[NOT_I]]
+// RV32-NEXT:    [[AND4_I2:%.*]] = and i64 [[B_COERCE]], [[M_COERCE]]
+// RV32-NEXT:    [[AND4_I:%.*]] = bitcast i64 [[AND4_I2]] to <2 x i32>
+// RV32-NEXT:    [[OR_I:%.*]] = or <2 x i32> [[AND_I]], [[AND4_I]]
+// RV32-NEXT:    [[TMP2:%.*]] = bitcast <2 x i32> [[OR_I]] to i64
+// RV32-NEXT:    ret i64 [[TMP2]]
+//
+// RV64-LABEL: define dso_local i64 @test_pmerge_u32x2(
+// RV64-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B_COERCE:%.*]], i64 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <2 x i32>
+// RV64-NEXT:    [[TMP1:%.*]] = bitcast i64 [[M_COERCE]] to <2 x i32>
+// RV64-NEXT:    [[NOT_I:%.*]] = xor <2 x i32> [[TMP1]], splat (i32 -1)
+// RV64-NEXT:    [[AND_I:%.*]] = and <2 x i32> [[TMP0]], [[NOT_I]]
+// RV64-NEXT:    [[AND4_I2:%.*]] = and i64 [[B_COERCE]], [[M_COERCE]]
+// RV64-NEXT:    [[AND4_I:%.*]] = bitcast i64 [[AND4_I2]] to <2 x i32>
+// RV64-NEXT:    [[OR_I:%.*]] = or <2 x i32> [[AND_I]], [[AND4_I]]
+// RV64-NEXT:    [[TMP2:%.*]] = bitcast <2 x i32> [[OR_I]] to i64
+// RV64-NEXT:    ret i64 [[TMP2]]
+//
+uint32x2_t test_pmerge_u32x2(uint32x2_t a, uint32x2_t b, uint32x2_t m) {
+  return __riscv_pmerge_u32x2(a, b, m);
+}
+
+// RV32-LABEL: define dso_local i64 @test_pmerge_i32x2(
+// RV32-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B_COERCE:%.*]], i64 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <2 x i32>
+// RV32-NEXT:    [[TMP1:%.*]] = bitcast i64 [[M_COERCE]] to <2 x i32>
+// RV32-NEXT:    [[NOT_I:%.*]] = xor <2 x i32> [[TMP1]], splat (i32 -1)
+// RV32-NEXT:    [[AND_I:%.*]] = and <2 x i32> [[TMP0]], [[NOT_I]]
+// RV32-NEXT:    [[AND4_I2:%.*]] = and i64 [[B_COERCE]], [[M_COERCE]]
+// RV32-NEXT:    [[AND4_I:%.*]] = bitcast i64 [[AND4_I2]] to <2 x i32>
+// RV32-NEXT:    [[OR_I:%.*]] = or <2 x i32> [[AND_I]], [[AND4_I]]
+// RV32-NEXT:    [[TMP2:%.*]] = bitcast <2 x i32> [[OR_I]] to i64
+// RV32-NEXT:    ret i64 [[TMP2]]
+//
+// RV64-LABEL: define dso_local i64 @test_pmerge_i32x2(
+// RV64-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B_COERCE:%.*]], i64 noundef [[M_COERCE:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <2 x i32>
+// RV64-NEXT:    [[TMP1:%.*]] = bitcast i64 [[M_COERCE]] to <2 x i32>
+// RV64-NEXT:    [[NOT_I:%.*]] = xor <2 x i32> [[TMP1]], splat (i32 -1)
+// RV64-NEXT:    [[AND_I:%.*]] = and <2 x i32> [[TMP0]], [[NOT_I]]
+// RV64-NEXT:    [[AND4_I2:%.*]] = and i64 [[B_COERCE]], [[M_COERCE]]
+// RV64-NEXT:    [[AND4_I:%.*]] = bitcast i64 [[AND4_I2]] to <2 x i32>
+// RV64-NEXT:    [[OR_I:%.*]] = or <2 x i32> [[AND_I]], [[AND4_I]]
+// RV64-NEXT:    [[TMP2:%.*]] = bitcast <2 x i32> [[OR_I]] to i64
+// RV64-NEXT:    ret i64 [[TMP2]]
+//
+int32x2_t test_pmerge_i32x2(int32x2_t a, int32x2_t b, uint32x2_t m) {
+  return __riscv_pmerge_i32x2(a, b, m);
+}
+

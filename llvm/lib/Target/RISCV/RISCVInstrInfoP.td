@@ -1942,6 +1942,14 @@ let Predicates = [HasStdExtP] in {
   def : PatGprGpr<smax, PMAX_H, XLenVecI16VT>;
   def : PatGprGpr<umax, PMAXU_H, XLenVecI16VT>;
 
+  // 8/16-bit bitwise merge patterns (rs1 & ~mask) | (rs2 & mask)
+  def : Pat<(XLenVecI8VT (or (and (XLenVecI8VT GPR:$rs2), (XLenVecI8VT GPR:$mask)),
+                             (and (vnot GPR:$mask), (XLenVecI8VT GPR:$rs1)))),
+            (PseudoMERGE GPR:$mask, GPR:$rs1, GPR:$rs2)>;
+  def : Pat<(XLenVecI16VT (or (and (XLenVecI16VT GPR:$rs2), (XLenVecI16VT GPR:$mask)),
+                              (and (vnot GPR:$mask), (XLenVecI16VT GPR:$rs1)))),
+            (PseudoMERGE GPR:$mask, GPR:$rs1, GPR:$rs2)>;
+
   // 8/16-bit vselect patterns
   def : Pat<(XLenVecI8VT (vselect (XLenVecI8VT GPR:$mask), GPR:$true_v, GPR:$false_v)),
             (MERGE GPR:$mask, GPR:$false_v, GPR:$true_v)>;
@@ -2139,6 +2147,17 @@ let Predicates = [HasStdExtP, IsRV64] in {
   def : PatGprGpr<umin, PMINU_W, v2i32>;
   def : PatGprGpr<smax, PMAX_W, v2i32>;
   def : PatGprGpr<umax, PMAXU_W, v2i32>;
+
+  // 32-bit bitwise merge patterns (rs1 & ~mask) | (rs2 & mask)
+  def : Pat<(v8i8 (or (and (v8i8 GPR:$rs2), (v8i8 GPR:$mask)),
+                      (and (vnot GPR:$mask), (v8i8 GPR:$rs1)))),
+            (PseudoMERGE GPR:$mask, GPR:$rs1, GPR:$rs2)>;
+  def : Pat<(v4i16 (or (and (v4i16 GPR:$rs2), (v4i16 GPR:$mask)),
+                       (and (vnot GPR:$mask), (v4i16 GPR:$rs1)))),
+            (PseudoMERGE GPR:$mask, GPR:$rs1, GPR:$rs2)>;
+  def : Pat<(v2i32 (or (and (v2i32 GPR:$rs2), (v2i32 GPR:$mask)),
+                       (and (vnot GPR:$mask), (v2i32 GPR:$rs1)))),
+            (PseudoMERGE GPR:$mask, GPR:$rs1, GPR:$rs2)>;
 
   // 32-bit vselect patterns
   def : Pat<(v2i32 (vselect (v2i32 GPR:$mask), GPR:$true_v, GPR:$false_v)),
