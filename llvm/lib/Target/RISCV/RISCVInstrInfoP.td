@@ -1859,6 +1859,15 @@ let Predicates = [HasStdExtP] in {
   def : PatGprGpr<int_riscv_pasub, PASUB_H, XLenVecI16VT>;
   def : PatGprGpr<int_riscv_pasubu, PASUBU_H, XLenVecI16VT>;
 
+  // 8-bit absolute difference sum patterns
+  def : Pat<(XLenVT (int_riscv_pabdsumu (XLenVecI8VT GPR:$rs1),
+                                         (XLenVecI8VT GPR:$rs2))),
+            (PABDSUMU_B GPR:$rs1, GPR:$rs2)>;
+  def : Pat<(XLenVT (int_riscv_pabdsumau (XLenVT GPR:$rd),
+                                          (XLenVecI8VT GPR:$rs1),
+                                          (XLenVecI8VT GPR:$rs2))),
+            (PABDSUMAU_B GPR:$rd, GPR:$rs1, GPR:$rs2)>;
+
   // 8-bit absolute difference patterns
   def : Pat<(XLenVecI8VT (abs GPR:$rs1)), (PABD_B GPR:$rs1, (XLenVecI8VT X0))>;
   def : PatGprGpr<abds, PABD_B, XLenVecI8VT>;

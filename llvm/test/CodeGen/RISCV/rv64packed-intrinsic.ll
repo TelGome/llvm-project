@@ -353,3 +353,101 @@ entry:
   %r = or <2 x i32> %x, %y
   ret <2 x i32> %r
 }
+
+
+; Packed Absolute Difference Sum
+
+declare i64 @llvm.riscv.pabdsumu.i64.v8i8(<8 x i8>, <8 x i8>)
+declare i64 @llvm.riscv.pabdsumau.i64.v8i8(i64, <8 x i8>, <8 x i8>)
+
+define signext i32 @pabdsumu_u8x4_u32(i32 %a, i32 %b) {
+; RV64P-LABEL: pabdsumu_u8x4_u32:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    zext.w a0, a0
+; RV64P-NEXT:    zext.w a1, a1
+; RV64P-NEXT:    pabdsumu.b a0, a0, a1
+; RV64P-NEXT:    sext.w a0, a0
+; RV64P-NEXT:    ret
+entry:
+  %a64 = zext i32 %a to i64
+  %va = bitcast i64 %a64 to <8 x i8>
+  %b64 = zext i32 %b to i64
+  %vb = bitcast i64 %b64 to <8 x i8>
+  %sum = call i64 @llvm.riscv.pabdsumu.i64.v8i8(<8 x i8> %va, <8 x i8> %vb)
+  %r = trunc i64 %sum to i32
+  ret i32 %r
+}
+
+define signext i32 @pabdsumau_u8x4_u32(i32 %rd, i32 %a, i32 %b) {
+; RV64P-LABEL: pabdsumau_u8x4_u32:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    zext.w a1, a1
+; RV64P-NEXT:    zext.w a2, a2
+; RV64P-NEXT:    zext.w a0, a0
+; RV64P-NEXT:    pabdsumau.b a0, a1, a2
+; RV64P-NEXT:    sext.w a0, a0
+; RV64P-NEXT:    ret
+entry:
+  %a64 = zext i32 %a to i64
+  %va = bitcast i64 %a64 to <8 x i8>
+  %b64 = zext i32 %b to i64
+  %vb = bitcast i64 %b64 to <8 x i8>
+  %rd64 = zext i32 %rd to i64
+  %sum = call i64 @llvm.riscv.pabdsumau.i64.v8i8(i64 %rd64, <8 x i8> %va, <8 x i8> %vb)
+  %r = trunc i64 %sum to i32
+  ret i32 %r
+}
+
+define signext i32 @pabdsumu_u8x8_u32(i64 %a, i64 %b) {
+; RV64P-LABEL: pabdsumu_u8x8_u32:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    pabdsumu.b a0, a0, a1
+; RV64P-NEXT:    sext.w a0, a0
+; RV64P-NEXT:    ret
+entry:
+  %va = bitcast i64 %a to <8 x i8>
+  %vb = bitcast i64 %b to <8 x i8>
+  %sum = call i64 @llvm.riscv.pabdsumu.i64.v8i8(<8 x i8> %va, <8 x i8> %vb)
+  %r = trunc i64 %sum to i32
+  ret i32 %r
+}
+
+define i64 @pabdsumu_u8x8_u64(i64 %a, i64 %b) {
+; RV64P-LABEL: pabdsumu_u8x8_u64:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    pabdsumu.b a0, a0, a1
+; RV64P-NEXT:    ret
+entry:
+  %va = bitcast i64 %a to <8 x i8>
+  %vb = bitcast i64 %b to <8 x i8>
+  %sum = call i64 @llvm.riscv.pabdsumu.i64.v8i8(<8 x i8> %va, <8 x i8> %vb)
+  ret i64 %sum
+}
+
+define signext i32 @pabdsumau_u8x8_u32(i32 %rd, i64 %a, i64 %b) {
+; RV64P-LABEL: pabdsumau_u8x8_u32:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    zext.w a0, a0
+; RV64P-NEXT:    pabdsumau.b a0, a1, a2
+; RV64P-NEXT:    sext.w a0, a0
+; RV64P-NEXT:    ret
+entry:
+  %va = bitcast i64 %a to <8 x i8>
+  %vb = bitcast i64 %b to <8 x i8>
+  %rd64 = zext i32 %rd to i64
+  %sum = call i64 @llvm.riscv.pabdsumau.i64.v8i8(i64 %rd64, <8 x i8> %va, <8 x i8> %vb)
+  %r = trunc i64 %sum to i32
+  ret i32 %r
+}
+
+define i64 @pabdsumau_u8x8_u64(i64 %rd, i64 %a, i64 %b) {
+; RV64P-LABEL: pabdsumau_u8x8_u64:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    pabdsumau.b a0, a1, a2
+; RV64P-NEXT:    ret
+entry:
+  %va = bitcast i64 %a to <8 x i8>
+  %vb = bitcast i64 %b to <8 x i8>
+  %sum = call i64 @llvm.riscv.pabdsumau.i64.v8i8(i64 %rd, <8 x i8> %va, <8 x i8> %vb)
+  ret i64 %sum
+}

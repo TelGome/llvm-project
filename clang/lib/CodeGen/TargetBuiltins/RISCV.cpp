@@ -1248,6 +1248,140 @@ Value *CodeGenFunction::EmitRISCVBuiltinExpr(unsigned BuiltinID,
     ID = Intrinsic::riscv_pabdu;
     break;
 
+  // Packed Absolute Difference Sum builtins
+  case RISCV::BI__builtin_riscv_pabdsumu_u8x4_u32:
+  case RISCV::BI__builtin_riscv_pabdsumu_u8x8_u32:
+  case RISCV::BI__builtin_riscv_pabdsumu_u8x8_u64: {
+    auto *I32Ty = Builder.getInt32Ty();
+    auto *I64Ty = Builder.getInt64Ty();
+    auto *V4I8Ty = llvm::FixedVectorType::get(Builder.getInt8Ty(), 4);
+    auto *V8I8Ty = llvm::FixedVectorType::get(Builder.getInt8Ty(), 8);
+    bool IsRV64 =
+        getContext().getTargetInfo().getPointerWidth(LangAS::Default) == 64;
+
+    auto SplitV8I8 = [&](Value *Op) {
+      Value *Packed = Builder.CreateBitCast(Op, I64Ty);
+      Value *Lo =
+          Builder.CreateBitCast(Builder.CreateTrunc(Packed, I32Ty), V4I8Ty);
+      Value *Hi = Builder.CreateBitCast(
+          Builder.CreateTrunc(Builder.CreateLShr(Packed, Builder.getInt64(32)),
+                              I32Ty),
+          V4I8Ty);
+      return std::make_pair(Lo, Hi);
+    };
+    auto EmitPabdsumuU8x4 = [&](Value *A, Value *B) {
+      llvm::Function *F =
+          CGM.getIntrinsic(Intrinsic::riscv_pabdsumu, {I32Ty, V4I8Ty});
+      return Builder.CreateCall(F, {A, B});
+    };
+    auto EmitPabdsumauU8x4 = [&](Value *Acc, Value *A, Value *B) {
+      llvm::Function *F =
+          CGM.getIntrinsic(Intrinsic::riscv_pabdsumau, {I32Ty, V4I8Ty});
+      return Builder.CreateCall(F, {Acc, A, B});
+    };
+
+    if (!IsRV64 && BuiltinID != RISCV::BI__builtin_riscv_pabdsumu_u8x4_u32) {
+      auto AHalves = SplitV8I8(Ops[0]);
+      auto BHalves = SplitV8I8(Ops[1]);
+      Value *LoSum = EmitPabdsumuU8x4(AHalves.first, BHalves.first);
+      if (BuiltinID == RISCV::BI__builtin_riscv_pabdsumu_u8x8_u32)
+        return EmitPabdsumauU8x4(LoSum, AHalves.second, BHalves.second);
+
+      Value *HiSum = EmitPabdsumuU8x4(AHalves.second, BHalves.second);
+      return Builder.CreateAdd(Builder.CreateZExt(LoSum, I64Ty),
+                               Builder.CreateZExt(HiSum, I64Ty));
+    }
+
+    llvm::Type *VecTy = Ops[0]->getType();
+    if (BuiltinID == RISCV::BI__builtin_riscv_pabdsumu_u8x4_u32 && IsRV64) {
+      // On RV64, pabdsumu.b operates on 8 bytes; zero-extend u8x4 to v8i8.
+      Ops[0] = Builder.CreateBitCast(
+          Builder.CreateZExt(Builder.CreateBitCast(Ops[0], I32Ty), I64Ty),
+          V8I8Ty);
+      Ops[1] = Builder.CreateBitCast(
+          Builder.CreateZExt(Builder.CreateBitCast(Ops[1], I32Ty), I64Ty),
+          V8I8Ty);
+      VecTy = V8I8Ty;
+    }
+    // Use XLen-sized integer type so the pattern matches PABDSUMU_B.
+    llvm::Type *IntTy =
+        cast<llvm::FixedVectorType>(VecTy)->getNumElements() == 8 ? I64Ty
+                                                                   : ResultType;
+    llvm::Function *F =
+        CGM.getIntrinsic(Intrinsic::riscv_pabdsumu, {IntTy, VecTy});
+    Value *Result = Builder.CreateCall(F, Ops);
+    return Result->getType() == ResultType ? Result
+                                           : Builder.CreateTrunc(Result, ResultType);
+  }
+  case RISCV::BI__builtin_riscv_pabdsumau_u8x4_u32:
+  case RISCV::BI__builtin_riscv_pabdsumau_u8x8_u32:
+  case RISCV::BI__builtin_riscv_pabdsumau_u8x8_u64: {
+    auto *I32Ty = Builder.getInt32Ty();
+    auto *I64Ty = Builder.getInt64Ty();
+    auto *V4I8Ty = llvm::FixedVectorType::get(Builder.getInt8Ty(), 4);
+    auto *V8I8Ty = llvm::FixedVectorType::get(Builder.getInt8Ty(), 8);
+    bool IsRV64 =
+        getContext().getTargetInfo().getPointerWidth(LangAS::Default) == 64;
+
+    auto SplitV8I8 = [&](Value *Op) {
+      Value *Packed = Builder.CreateBitCast(Op, I64Ty);
+      Value *Lo =
+          Builder.CreateBitCast(Builder.CreateTrunc(Packed, I32Ty), V4I8Ty);
+      Value *Hi = Builder.CreateBitCast(
+          Builder.CreateTrunc(Builder.CreateLShr(Packed, Builder.getInt64(32)),
+                              I32Ty),
+          V4I8Ty);
+      return std::make_pair(Lo, Hi);
+    };
+    auto EmitPabdsumuU8x4 = [&](Value *A, Value *B) {
+      llvm::Function *F =
+          CGM.getIntrinsic(Intrinsic::riscv_pabdsumu, {I32Ty, V4I8Ty});
+      return Builder.CreateCall(F, {A, B});
+    };
+    auto EmitPabdsumauU8x4 = [&](Value *Acc, Value *A, Value *B) {
+      llvm::Function *F =
+          CGM.getIntrinsic(Intrinsic::riscv_pabdsumau, {I32Ty, V4I8Ty});
+      return Builder.CreateCall(F, {Acc, A, B});
+    };
+
+    if (!IsRV64 && BuiltinID != RISCV::BI__builtin_riscv_pabdsumau_u8x4_u32) {
+      auto AHalves = SplitV8I8(Ops[1]);
+      auto BHalves = SplitV8I8(Ops[2]);
+      if (BuiltinID == RISCV::BI__builtin_riscv_pabdsumau_u8x8_u32) {
+        Value *LoAcc = EmitPabdsumauU8x4(Ops[0], AHalves.first, BHalves.first);
+        return EmitPabdsumauU8x4(LoAcc, AHalves.second, BHalves.second);
+      }
+
+      Value *LoSum = EmitPabdsumuU8x4(AHalves.first, BHalves.first);
+      Value *HiSum = EmitPabdsumuU8x4(AHalves.second, BHalves.second);
+      Value *Result = Builder.CreateAdd(Builder.CreateZExtOrTrunc(Ops[0], I64Ty),
+                                        Builder.CreateZExt(LoSum, I64Ty));
+      return Builder.CreateAdd(Result, Builder.CreateZExt(HiSum, I64Ty));
+    }
+
+    llvm::Type *VecTy = Ops[1]->getType();
+    if (BuiltinID == RISCV::BI__builtin_riscv_pabdsumau_u8x4_u32 && IsRV64) {
+      // On RV64, pabdsumau.b operates on 8 bytes; zero-extend u8x4 to v8i8.
+      Ops[1] = Builder.CreateBitCast(
+          Builder.CreateZExt(Builder.CreateBitCast(Ops[1], I32Ty), I64Ty),
+          V8I8Ty);
+      Ops[2] = Builder.CreateBitCast(
+          Builder.CreateZExt(Builder.CreateBitCast(Ops[2], I32Ty), I64Ty),
+          V8I8Ty);
+      VecTy = V8I8Ty;
+    }
+    // Use XLen-sized integer type so the pattern matches PABDSUMAU_B.
+    llvm::Type *IntTy =
+        cast<llvm::FixedVectorType>(VecTy)->getNumElements() == 8 ? I64Ty
+                                                                   : ResultType;
+    Ops[0] = Builder.CreateZExtOrTrunc(Ops[0], IntTy);
+    llvm::Function *F =
+        CGM.getIntrinsic(Intrinsic::riscv_pabdsumau, {IntTy, VecTy});
+    Value *Result = Builder.CreateCall(F, Ops);
+    return Result->getType() == ResultType ? Result
+                                           : Builder.CreateTrunc(Result, ResultType);
+  }
+
   // Zk builtins
 
   // Zknh

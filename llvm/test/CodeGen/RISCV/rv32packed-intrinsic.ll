@@ -311,3 +311,125 @@ entry:
   %r = or <2 x i32> %x, %y
   ret <2 x i32> %r
 }
+
+; Packed Absolute Difference Sum
+
+declare i32 @llvm.riscv.pabdsumu.i32.v4i8(<4 x i8>, <4 x i8>)
+declare i32 @llvm.riscv.pabdsumau.i32.v4i8(i32, <4 x i8>, <4 x i8>)
+
+define i32 @pabdsumu_u8x4_u32(<4 x i8> %a, <4 x i8> %b) {
+; RV32P-LABEL: pabdsumu_u8x4_u32:
+; RV32P:       # %bb.0: # %entry
+; RV32P-NEXT:    pabdsumu.b a0, a0, a1
+; RV32P-NEXT:    ret
+entry:
+  %sum = call i32 @llvm.riscv.pabdsumu.i32.v4i8(<4 x i8> %a, <4 x i8> %b)
+  ret i32 %sum
+}
+
+define i32 @pabdsumau_u8x4_u32(i32 %rd, <4 x i8> %a, <4 x i8> %b) {
+; RV32P-LABEL: pabdsumau_u8x4_u32:
+; RV32P:       # %bb.0: # %entry
+; RV32P-NEXT:    pabdsumau.b a0, a1, a2
+; RV32P-NEXT:    ret
+entry:
+  %sum = call i32 @llvm.riscv.pabdsumau.i32.v4i8(i32 %rd, <4 x i8> %a, <4 x i8> %b)
+  ret i32 %sum
+}
+
+define i32 @pabdsumu_u8x8_u32(i64 %a, i64 %b) {
+; RV32P-LABEL: pabdsumu_u8x8_u32:
+; RV32P:       # %bb.0: # %entry
+; RV32P-NEXT:    pabdsumu.b a0, a0, a2
+; RV32P-NEXT:    pabdsumau.b a0, a1, a3
+; RV32P-NEXT:    ret
+entry:
+  %a.lo = trunc i64 %a to i32
+  %va.lo = bitcast i32 %a.lo to <4 x i8>
+  %a.hi.sh = lshr i64 %a, 32
+  %a.hi = trunc i64 %a.hi.sh to i32
+  %va.hi = bitcast i32 %a.hi to <4 x i8>
+  %b.lo = trunc i64 %b to i32
+  %vb.lo = bitcast i32 %b.lo to <4 x i8>
+  %b.hi.sh = lshr i64 %b, 32
+  %b.hi = trunc i64 %b.hi.sh to i32
+  %vb.hi = bitcast i32 %b.hi to <4 x i8>
+  %sum.lo = call i32 @llvm.riscv.pabdsumu.i32.v4i8(<4 x i8> %va.lo, <4 x i8> %vb.lo)
+  %sum = call i32 @llvm.riscv.pabdsumau.i32.v4i8(i32 %sum.lo, <4 x i8> %va.hi, <4 x i8> %vb.hi)
+  ret i32 %sum
+}
+
+define i64 @pabdsumu_u8x8_u64(i64 %a, i64 %b) {
+; RV32P-LABEL: pabdsumu_u8x8_u64:
+; RV32P:       # %bb.0: # %entry
+; RV32P-NEXT:    pabdsumu.b a0, a0, a2
+; RV32P-NEXT:    pabdsumu.b a1, a1, a3
+; RV32P-NEXT:    waddu a0, a0, a1
+; RV32P-NEXT:    ret
+entry:
+  %a.lo = trunc i64 %a to i32
+  %va.lo = bitcast i32 %a.lo to <4 x i8>
+  %a.hi.sh = lshr i64 %a, 32
+  %a.hi = trunc i64 %a.hi.sh to i32
+  %va.hi = bitcast i32 %a.hi to <4 x i8>
+  %b.lo = trunc i64 %b to i32
+  %vb.lo = bitcast i32 %b.lo to <4 x i8>
+  %b.hi.sh = lshr i64 %b, 32
+  %b.hi = trunc i64 %b.hi.sh to i32
+  %vb.hi = bitcast i32 %b.hi to <4 x i8>
+  %sum.lo = call i32 @llvm.riscv.pabdsumu.i32.v4i8(<4 x i8> %va.lo, <4 x i8> %vb.lo)
+  %sum.hi = call i32 @llvm.riscv.pabdsumu.i32.v4i8(<4 x i8> %va.hi, <4 x i8> %vb.hi)
+  %sum.lo.z = zext i32 %sum.lo to i64
+  %sum.hi.z = zext i32 %sum.hi to i64
+  %sum = add i64 %sum.lo.z, %sum.hi.z
+  ret i64 %sum
+}
+
+define i32 @pabdsumau_u8x8_u32(i32 %rd, i64 %a, i64 %b) {
+; RV32P-LABEL: pabdsumau_u8x8_u32:
+; RV32P:       # %bb.0: # %entry
+; RV32P-NEXT:    pabdsumau.b a0, a1, a3
+; RV32P-NEXT:    pabdsumau.b a0, a2, a4
+; RV32P-NEXT:    ret
+entry:
+  %a.lo = trunc i64 %a to i32
+  %va.lo = bitcast i32 %a.lo to <4 x i8>
+  %a.hi.sh = lshr i64 %a, 32
+  %a.hi = trunc i64 %a.hi.sh to i32
+  %va.hi = bitcast i32 %a.hi to <4 x i8>
+  %b.lo = trunc i64 %b to i32
+  %vb.lo = bitcast i32 %b.lo to <4 x i8>
+  %b.hi.sh = lshr i64 %b, 32
+  %b.hi = trunc i64 %b.hi.sh to i32
+  %vb.hi = bitcast i32 %b.hi to <4 x i8>
+  %sum.lo = call i32 @llvm.riscv.pabdsumau.i32.v4i8(i32 %rd, <4 x i8> %va.lo, <4 x i8> %vb.lo)
+  %sum = call i32 @llvm.riscv.pabdsumau.i32.v4i8(i32 %sum.lo, <4 x i8> %va.hi, <4 x i8> %vb.hi)
+  ret i32 %sum
+}
+
+define i64 @pabdsumau_u8x8_u64(i64 %rd, i64 %a, i64 %b) {
+; RV32P-LABEL: pabdsumau_u8x8_u64:
+; RV32P:       # %bb.0: # %entry
+; RV32P-NEXT:    pabdsumu.b a2, a2, a4
+; RV32P-NEXT:    pabdsumu.b a3, a3, a5
+; RV32P-NEXT:    waddau a0, a2, a3
+; RV32P-NEXT:    ret
+entry:
+  %a.lo = trunc i64 %a to i32
+  %va.lo = bitcast i32 %a.lo to <4 x i8>
+  %a.hi.sh = lshr i64 %a, 32
+  %a.hi = trunc i64 %a.hi.sh to i32
+  %va.hi = bitcast i32 %a.hi to <4 x i8>
+  %b.lo = trunc i64 %b to i32
+  %vb.lo = bitcast i32 %b.lo to <4 x i8>
+  %b.hi.sh = lshr i64 %b, 32
+  %b.hi = trunc i64 %b.hi.sh to i32
+  %vb.hi = bitcast i32 %b.hi to <4 x i8>
+  %sum.lo = call i32 @llvm.riscv.pabdsumu.i32.v4i8(<4 x i8> %va.lo, <4 x i8> %vb.lo)
+  %sum.hi = call i32 @llvm.riscv.pabdsumu.i32.v4i8(<4 x i8> %va.hi, <4 x i8> %vb.hi)
+  %sum.lo.z = zext i32 %sum.lo to i64
+  %acc = add i64 %rd, %sum.lo.z
+  %sum.hi.z = zext i32 %sum.hi to i64
+  %sum = add i64 %acc, %sum.hi.z
+  ret i64 %sum
+}

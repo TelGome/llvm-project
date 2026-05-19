@@ -158,6 +158,7 @@ def pabd_i8x4 : RISCVBuiltin<"_Vector<4, unsigned char>(_Vector<4, signed char>,
 def pabd_i16x2 : RISCVBuiltin<"_Vector<2, unsigned short>(_Vector<2, signed short>, _Vector<2, signed short>)">;
 def pabdu_u8x4 : RISCVBuiltin<"_Vector<4, unsigned char>(_Vector<4, unsigned char>, _Vector<4, unsigned char>)">;
 def pabdu_u16x2 : RISCVBuiltin<"_Vector<2, unsigned short>(_Vector<2, unsigned short>, _Vector<2, unsigned short>)">;
+
 } // Features = "experimental-p,32bit"
 
 let Features = "experimental-p,64bit" in {
@@ -183,6 +184,16 @@ def pabd_i16x4 : RISCVBuiltin<"_Vector<4, unsigned short>(_Vector<4, signed shor
 def pabdu_u8x8 : RISCVBuiltin<"_Vector<8, unsigned char>(_Vector<8, unsigned char>, _Vector<8, unsigned char>)">;
 def pabdu_u16x4 : RISCVBuiltin<"_Vector<4, unsigned short>(_Vector<4, unsigned short>, _Vector<4, unsigned short>)">;
 } // Features = "experimental-p,64bit"
+
+let Features = "experimental-p" in {
+// Packed Absolute Difference Sum
+def pabdsumu_u8x4_u32 : RISCVBuiltin<"unsigned int(_Vector<4, unsigned char>, _Vector<4, unsigned char>)">;
+def pabdsumau_u8x4_u32 : RISCVBuiltin<"unsigned int(unsigned int, _Vector<4, unsigned char>, _Vector<4, unsigned char>)">;
+def pabdsumu_u8x8_u32 : RISCVBuiltin<"unsigned int(_Vector<8, unsigned char>, _Vector<8, unsigned char>)">;
+def pabdsumu_u8x8_u64 : RISCVBuiltin<"uint64_t(_Vector<8, unsigned char>, _Vector<8, unsigned char>)">;
+def pabdsumau_u8x8_u32 : RISCVBuiltin<"unsigned int(unsigned int, _Vector<8, unsigned char>, _Vector<8, unsigned char>)">;
+def pabdsumau_u8x8_u64 : RISCVBuiltin<"uint64_t(uint64_t, _Vector<8, unsigned char>, _Vector<8, unsigned char>)">;
+} // Features = "experimental-p"
 
 } // Attributes = [Const, NoThrow]
 

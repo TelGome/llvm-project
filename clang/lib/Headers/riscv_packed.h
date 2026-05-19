@@ -53,6 +53,18 @@ typedef uint32_t uint32x2_t __attribute__((__vector_size__(8), __aligned__(8)));
     return __builtin_riscv_##name(__rs1, __rs2);                               \
   }
 
+#define __packed_binary_scalar(name, rty, ty)                    \
+  static __inline__ rty __DEFAULT_FN_ATTRS                                     \
+  __riscv_##name(ty __rs1, ty __rs2) {                                         \
+    return __builtin_riscv_##name(__rs1, __rs2);                       \
+  }
+
+#define __packed_ternary_scalar(name, rty, ty)                   \
+  static __inline__ rty __DEFAULT_FN_ATTRS                                     \
+  __riscv_##name(rty __rd, ty __rs1, ty __rs2) {                               \
+    return __builtin_riscv_##name(__rd, __rs1, __rs2);                 \
+  }
+
 #define __packed_shift(name, ty, op, mask)                                     \
   static __inline__ ty __DEFAULT_FN_ATTRS                                      \
   __riscv_##name(ty __rs1, unsigned __rs2) {                                   \
@@ -247,17 +259,27 @@ __packed_unary_op(pnot_u16x4, uint16x4_t, ~)
 __packed_unary_op(pnot_i32x2, int32x2_t, ~)
 __packed_unary_op(pnot_u32x2, uint32x2_t, ~)
 
-/* Packed Merge */
+/* Packed Merge (32-bit) */
 __packed_merge(pmerge_u8x4, uint8x4_t, uint8x4_t)
 __packed_merge(pmerge_i8x4, int8x4_t, uint8x4_t)
 __packed_merge(pmerge_u16x2, uint16x2_t, uint16x2_t)
 __packed_merge(pmerge_i16x2, int16x2_t, uint16x2_t)
+
+/* Packed Merge (64-bit) */
 __packed_merge(pmerge_u8x8, uint8x8_t, uint8x8_t)
 __packed_merge(pmerge_i8x8, int8x8_t, uint8x8_t)
 __packed_merge(pmerge_u16x4, uint16x4_t, uint16x4_t)
 __packed_merge(pmerge_i16x4, int16x4_t, uint16x4_t)
 __packed_merge(pmerge_u32x2, uint32x2_t, uint32x2_t)
 __packed_merge(pmerge_i32x2, int32x2_t, uint32x2_t)
+
+/* Packed Absolute Difference Sum */
+__packed_binary_scalar(pabdsumu_u8x4_u32, uint32_t, uint8x4_t)
+__packed_ternary_scalar(pabdsumau_u8x4_u32, uint32_t, uint8x4_t)
+__packed_binary_scalar(pabdsumu_u8x8_u32, uint32_t, uint8x8_t)
+__packed_binary_scalar(pabdsumu_u8x8_u64, uint64_t, uint8x8_t)
+__packed_ternary_scalar(pabdsumau_u8x8_u32, uint32_t, uint8x8_t)
+__packed_ternary_scalar(pabdsumau_u8x8_u64, uint64_t, uint8x8_t)
 
 #if __riscv_xlen == 32
 __packed_binary(paadd_i8x4, int8x4_t, int8x4_t)
@@ -300,6 +322,7 @@ __packed_binary(pabd_i16x4, uint16x4_t, int16x4_t)
 __packed_binary(pabdu_u8x8, uint8x8_t, uint8x8_t)
 __packed_binary(pabdu_u16x4, uint16x4_t, uint16x4_t)
 
+
 #endif
 
 
@@ -318,6 +341,8 @@ __packed_binary(pabdu_u16x4, uint16x4_t, uint16x4_t)
 #undef __packed_minmax
 #undef __packed_unary
 #undef __packed_binary
+#undef __packed_binary_scalar
+#undef __packed_ternary_scalar
 #undef __DEFAULT_FN_ATTRS
 
 #if defined(__cplusplus)
