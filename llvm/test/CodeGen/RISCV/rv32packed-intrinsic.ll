@@ -315,7 +315,6 @@ entry:
 ; Packed Absolute Difference Sum
 
 declare i32 @llvm.riscv.pabdsumu.i32.v4i8(<4 x i8>, <4 x i8>)
-declare i32 @llvm.riscv.pabdsumau.i32.v4i8(i32, <4 x i8>, <4 x i8>)
 
 define i32 @pabdsumu_u8x4_u32(<4 x i8> %a, <4 x i8> %b) {
 ; RV32P-LABEL: pabdsumu_u8x4_u32:
@@ -432,4 +431,76 @@ entry:
   %sum.hi.z = zext i32 %sum.hi to i64
   %sum = add i64 %acc, %sum.hi.z
   ret i64 %sum
+}
+
+; Packed Saturating Absolute Value
+
+declare <4 x i8> @llvm.riscv.psabs.v4i8(<4 x i8>)
+
+define <4 x i8> @psabs_i8x4(<4 x i8> %a) {
+; RV32P-LABEL: psabs_i8x4:
+; RV32P:       # %bb.0: # %entry
+; RV32P-NEXT:    psabs.b a0, a0
+; RV32P-NEXT:    ret
+entry:
+  %tmp = call <4 x i8> @llvm.riscv.psabs.v4i8(<4 x i8> %a)
+  ret <4 x i8> %tmp
+}
+
+declare <2 x i16> @llvm.riscv.psabs.v2i16(<2 x i16>)
+
+define <2 x i16> @psabs_i16x2(<2 x i16> %a) {
+; RV32P-LABEL: psabs_i16x2:
+; RV32P:       # %bb.0: # %entry
+; RV32P-NEXT:    psabs.h a0, a0
+; RV32P-NEXT:    ret
+entry:
+  %tmp = call <2 x i16> @llvm.riscv.psabs.v2i16(<2 x i16> %a)
+  ret <2 x i16> %tmp
+}
+
+define i64 @psabs_i8x8(i64 %a) {
+; RV32P-LABEL: psabs_i8x8:
+; RV32P:       # %bb.0: # %entry
+; RV32P-NEXT:    psabs.b a0, a0
+; RV32P-NEXT:    psabs.b a1, a1
+; RV32P-NEXT:    ret
+entry:
+  %0 = trunc i64 %a to i32
+  %1 = bitcast i32 %0 to <4 x i8>
+  %2 = lshr i64 %a, 32
+  %3 = trunc nuw i64 %2 to i32
+  %4 = bitcast i32 %3 to <4 x i8>
+  %5 = call <4 x i8> @llvm.riscv.psabs.v4i8(<4 x i8> %1)
+  %6 = call <4 x i8> @llvm.riscv.psabs.v4i8(<4 x i8> %4)
+  %7 = bitcast <4 x i8> %5 to i32
+  %8 = zext i32 %7 to i64
+  %9 = bitcast <4 x i8> %6 to i32
+  %10 = zext i32 %9 to i64
+  %11 = shl nuw i64 %10, 32
+  %12 = or disjoint i64 %11, %8
+  ret i64 %12
+}
+
+define i64 @psabs_i16x4(i64 %a) {
+; RV32P-LABEL: psabs_i16x4:
+; RV32P:       # %bb.0: # %entry
+; RV32P-NEXT:    psabs.h a0, a0
+; RV32P-NEXT:    psabs.h a1, a1
+; RV32P-NEXT:    ret
+entry:
+  %0 = trunc i64 %a to i32
+  %1 = bitcast i32 %0 to <2 x i16>
+  %2 = lshr i64 %a, 32
+  %3 = trunc nuw i64 %2 to i32
+  %4 = bitcast i32 %3 to <2 x i16>
+  %5 = call <2 x i16> @llvm.riscv.psabs.v2i16(<2 x i16> %1)
+  %6 = call <2 x i16> @llvm.riscv.psabs.v2i16(<2 x i16> %4)
+  %7 = bitcast <2 x i16> %5 to i32
+  %8 = zext i32 %7 to i64
+  %9 = bitcast <2 x i16> %6 to i32
+  %10 = zext i32 %9 to i64
+  %11 = shl nuw i64 %10, 32
+  %12 = or disjoint i64 %11, %8
+  ret i64 %12
 }

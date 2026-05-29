@@ -2014,6 +2014,9 @@ let TargetPrefix = "riscv" in {
   def int_riscv_pabs : Intrinsic<[llvm_anyvector_ty],
                                         [LLVMMatchType<0>],
                                         [IntrNoMem, IntrSpeculatable]>;
+  def int_riscv_psabs : Intrinsic<[llvm_anyvector_ty],
+                                         [LLVMMatchType<0>],
+                                         [IntrNoMem, IntrSpeculatable]>;
   def int_riscv_pabd : Intrinsic<[llvm_anyvector_ty],
                                         [LLVMMatchType<0>, LLVMMatchType<0>],
                                         [IntrNoMem, IntrSpeculatable]>;

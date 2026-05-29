@@ -193,6 +193,12 @@ def pabdsumu_u8x8_u32 : RISCVBuiltin<"unsigned int(_Vector<8, unsigned char>, _V
 def pabdsumu_u8x8_u64 : RISCVBuiltin<"uint64_t(_Vector<8, unsigned char>, _Vector<8, unsigned char>)">;
 def pabdsumau_u8x8_u32 : RISCVBuiltin<"unsigned int(unsigned int, _Vector<8, unsigned char>, _Vector<8, unsigned char>)">;
 def pabdsumau_u8x8_u64 : RISCVBuiltin<"uint64_t(uint64_t, _Vector<8, unsigned char>, _Vector<8, unsigned char>)">;
+
+// Packed Saturating Absolute Value
+def psabs_i8x4 : RISCVBuiltin<"_Vector<4, signed char>(_Vector<4, signed char>)">;
+def psabs_i16x2 : RISCVBuiltin<"_Vector<2, signed short>(_Vector<2, signed short>)">;
+def psabs_i8x8 : RISCVBuiltin<"_Vector<8, signed char>(_Vector<8, signed char>)">;
+def psabs_i16x4 : RISCVBuiltin<"_Vector<4, signed short>(_Vector<4, signed short>)">;
 } // Features = "experimental-p"
 
 } // Attributes = [Const, NoThrow]

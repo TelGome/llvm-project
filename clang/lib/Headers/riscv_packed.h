@@ -281,6 +281,12 @@ __packed_binary_scalar(pabdsumu_u8x8_u64, uint64_t, uint8x8_t)
 __packed_ternary_scalar(pabdsumau_u8x8_u32, uint32_t, uint8x8_t)
 __packed_ternary_scalar(pabdsumau_u8x8_u64, uint64_t, uint8x8_t)
 
+/* Packed Saturating Absolute Value */
+__packed_unary(psabs_i8x4, int8x4_t, int8x4_t)
+__packed_unary(psabs_i16x2, int16x2_t, int16x2_t)
+__packed_unary(psabs_i8x8, int8x8_t, int8x8_t)
+__packed_unary(psabs_i16x4, int16x4_t, int16x4_t)
+
 #if __riscv_xlen == 32
 __packed_binary(paadd_i8x4, int8x4_t, int8x4_t)
 __packed_binary(paadd_i16x2, int16x2_t, int16x2_t)

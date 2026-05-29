@@ -1876,6 +1876,7 @@ let Predicates = [HasStdExtP] in {
   def : Pat<(XLenVecI8VT (int_riscv_pabs (XLenVecI8VT GPR:$rs1))), (PABD_B GPR:$rs1, (XLenVecI8VT X0))>;
   def : PatGprGpr<int_riscv_pabd, PABD_B, XLenVecI8VT>;
   def : PatGprGpr<int_riscv_pabdu, PABDU_B, XLenVecI8VT>;
+  def : Pat<(XLenVecI8VT (int_riscv_psabs (XLenVecI8VT GPR:$rs1))), (PSABS_B GPR:$rs1)>;
 
   // 16-bit absolute difference patterns
   def : Pat<(XLenVecI16VT (abs GPR:$rs1)), (PABD_H GPR:$rs1, (XLenVecI16VT X0))>;
@@ -1885,6 +1886,9 @@ let Predicates = [HasStdExtP] in {
   def : Pat<(XLenVecI16VT (int_riscv_pabs (XLenVecI16VT GPR:$rs1))), (PABD_H GPR:$rs1, (XLenVecI16VT X0))>;
   def : PatGprGpr<int_riscv_pabd, PABD_H, XLenVecI16VT>;
   def : PatGprGpr<int_riscv_pabdu, PABDU_H, XLenVecI16VT>;
+  def : Pat<(XLenVecI16VT (int_riscv_psabs (XLenVecI16VT GPR:$rs1))), (PSABS_H GPR:$rs1)>;
+  def : Pat<(v4i8 (int_riscv_psabs (v4i8 GPR:$rs1))), (PSABS_B GPR:$rs1)>;
+  def : Pat<(v2i16 (int_riscv_psabs (v2i16 GPR:$rs1))), (PSABS_H GPR:$rs1)>;
 
   // 16-bit multiply high patterns
   def : PatGprGpr<mulhs, PMULH_H, XLenVecI16VT>;

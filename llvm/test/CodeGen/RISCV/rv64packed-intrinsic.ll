@@ -451,3 +451,64 @@ entry:
   %sum = call i64 @llvm.riscv.pabdsumau.i64.v8i8(i64 %rd, <8 x i8> %va, <8 x i8> %vb)
   ret i64 %sum
 }
+
+; Packed Saturating Absolute Value
+
+declare <4 x i8> @llvm.riscv.psabs.v4i8(<4 x i8>)
+
+define i32 @psabs_i8x4(i32 %a) {
+; RV64P-LABEL: psabs_i8x4:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    zext.w a0, a0
+; RV64P-NEXT:    psabs.b a0, a0
+; RV64P-NEXT:    ret
+entry:
+  %0 = zext i32 %a to i64
+  %1 = bitcast i64 %0 to <8 x i8>
+  %2 = call <8 x i8> @llvm.riscv.psabs.v8i8(<8 x i8> %1)
+  %3 = bitcast <8 x i8> %2 to <2 x i32>
+  %4 = extractelement <2 x i32> %3, i64 0
+  ret i32 %4
+}
+
+declare <2 x i16> @llvm.riscv.psabs.v2i16(<2 x i16>)
+
+define i32 @psabs_i16x2(i32 %a) {
+; RV64P-LABEL: psabs_i16x2:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    zext.w a0, a0
+; RV64P-NEXT:    psabs.h a0, a0
+; RV64P-NEXT:    ret
+entry:
+  %0 = zext i32 %a to i64
+  %1 = bitcast i64 %0 to <4 x i16>
+  %2 = call <4 x i16> @llvm.riscv.psabs.v4i16(<4 x i16> %1)
+  %3 = bitcast <4 x i16> %2 to <2 x i32>
+  %4 = extractelement <2 x i32> %3, i64 0
+  ret i32 %4
+}
+
+declare <8 x i8>  @llvm.riscv.psabs.v8i8(<8 x i8>)
+
+define <8 x i8> @psabs_i8x8(<8 x i8> %a) {
+; RV64P-LABEL: psabs_i8x8:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    psabs.b a0, a0
+; RV64P-NEXT:    ret
+entry:
+  %tmp = call <8 x i8> @llvm.riscv.psabs.v8i8(<8 x i8> %a)
+  ret <8 x i8> %tmp
+}
+
+declare <4 x i16> @llvm.riscv.psabs.v4i16(<4 x i16>)
+
+define <4 x i16> @psabs_i16x4(<4 x i16> %a) {
+; RV64P-LABEL: psabs_i16x4:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    psabs.h a0, a0
+; RV64P-NEXT:    ret
+entry:
+  %tmp = call <4 x i16> @llvm.riscv.psabs.v4i16(<4 x i16> %a)
+  ret <4 x i16> %tmp
+}
+

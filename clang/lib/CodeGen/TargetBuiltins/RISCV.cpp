@@ -1233,6 +1233,69 @@ Value *CodeGenFunction::EmitRISCVBuiltinExpr(unsigned BuiltinID,
     IntrinsicTypes = {ResultType};
     ID = Intrinsic::riscv_pabs;
     break;
+  case RISCV::BI__builtin_riscv_psabs_i8x4:
+  case RISCV::BI__builtin_riscv_psabs_i16x2:
+  case RISCV::BI__builtin_riscv_psabs_i8x8:
+  case RISCV::BI__builtin_riscv_psabs_i16x4: {
+    llvm::Type *VecTy = Ops[0]->getType();
+    auto *I64Ty = Builder.getInt64Ty();
+    auto *I32Ty = Builder.getInt32Ty();
+    bool IsRV64 =
+        getContext().getTargetInfo().getPointerWidth(LangAS::Default) == 64;
+    unsigned NumElts = cast<llvm::FixedVectorType>(VecTy)->getNumElements();
+    llvm::Type *EltTy =
+        cast<llvm::FixedVectorType>(VecTy)->getElementType();
+    bool Is32BitTy =
+        (NumElts * EltTy->getPrimitiveSizeInBits()) == 32;
+
+    // On RV32, split 64-bit vectors into two 32-bit halves.
+    if (!IsRV64 && !Is32BitTy) {
+      auto *HalfVecTy =
+          llvm::FixedVectorType::get(EltTy, NumElts / 2);
+      auto Split = [&](Value *Op) {
+        Value *Packed = Builder.CreateBitCast(Op, I64Ty);
+        Value *Lo = Builder.CreateBitCast(
+            Builder.CreateTrunc(Packed, I32Ty), HalfVecTy);
+        Value *Hi = Builder.CreateBitCast(
+            Builder.CreateTrunc(
+                Builder.CreateLShr(Packed, Builder.getInt64(32)), I32Ty),
+            HalfVecTy);
+        return std::make_pair(Lo, Hi);
+      };
+      auto Combine = [&](Value *Lo, Value *Hi) {
+        Value *Lo64 =
+            Builder.CreateZExt(Builder.CreateBitCast(Lo, I32Ty), I64Ty);
+        Value *Hi64 = Builder.CreateShl(
+            Builder.CreateZExt(Builder.CreateBitCast(Hi, I32Ty), I64Ty),
+            Builder.getInt64(32));
+        return Builder.CreateBitCast(
+            Builder.CreateOr(Lo64, Hi64), ResultType);
+      };
+      llvm::Function *F =
+          CGM.getIntrinsic(Intrinsic::riscv_psabs, {HalfVecTy});
+      auto Halves = Split(Ops[0]);
+      Value *LoRes = Builder.CreateCall(F, {Halves.first});
+      Value *HiRes = Builder.CreateCall(F, {Halves.second});
+      return Combine(LoRes, HiRes);
+    }
+
+    // On RV64, widen 32-bit vectors to 64-bit.
+    if (IsRV64 && Is32BitTy) {
+      llvm::Type *WideVecTy =
+          llvm::FixedVectorType::get(EltTy, NumElts * 2);
+      Ops[0] = Builder.CreateBitCast(
+          Builder.CreateZExt(Builder.CreateBitCast(Ops[0], I32Ty), I64Ty),
+          WideVecTy);
+      VecTy = WideVecTy;
+    }
+    llvm::Function *F = CGM.getIntrinsic(Intrinsic::riscv_psabs, {VecTy});
+    Value *Result = Builder.CreateCall(F, Ops);
+    if (IsRV64 && Is32BitTy)
+      Result = Builder.CreateBitCast(
+          Builder.CreateTrunc(Builder.CreateBitCast(Result, I64Ty), I32Ty),
+          ResultType);
+    return Result;
+  }
   case RISCV::BI__builtin_riscv_pabd_i8x4:
   case RISCV::BI__builtin_riscv_pabd_i16x2:
   case RISCV::BI__builtin_riscv_pabd_i8x8:
