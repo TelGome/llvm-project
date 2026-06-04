@@ -186,6 +186,22 @@ def pabdu_u16x4 : RISCVBuiltin<"_Vector<4, unsigned short>(_Vector<4, unsigned s
 } // Features = "experimental-p,64bit"
 
 let Features = "experimental-p" in {
+// Packed Reduction Sum
+def predsum_i8x4_i32 : RISCVBuiltin<"int(_Vector<4, signed char>, int)">;
+def predsumu_u8x4_u32 : RISCVBuiltin<"unsigned int(_Vector<4, unsigned char>, unsigned int)">;
+def predsum_i16x2_i32 : RISCVBuiltin<"int(_Vector<2, signed short>, int)">;
+def predsumu_u16x2_u32 : RISCVBuiltin<"unsigned int(_Vector<2, unsigned short>, unsigned int)">;
+def predsum_i8x8_i32 : RISCVBuiltin<"int(_Vector<8, signed char>, int)">;
+def predsumu_u8x8_u32 : RISCVBuiltin<"unsigned int(_Vector<8, unsigned char>, unsigned int)">;
+def predsum_i16x4_i32 : RISCVBuiltin<"int(_Vector<4, signed short>, int)">;
+def predsumu_u16x4_u32 : RISCVBuiltin<"unsigned int(_Vector<4, unsigned short>, unsigned int)">;
+def predsum_i8x8_i64 : RISCVBuiltin<"int64_t(_Vector<8, signed char>, int64_t)">;
+def predsumu_u8x8_u64 : RISCVBuiltin<"uint64_t(_Vector<8, unsigned char>, uint64_t)">;
+def predsum_i16x4_i64 : RISCVBuiltin<"int64_t(_Vector<4, signed short>, int64_t)">;
+def predsumu_u16x4_u64 : RISCVBuiltin<"uint64_t(_Vector<4, unsigned short>, uint64_t)">;
+def predsum_i32x2_i64 : RISCVBuiltin<"int64_t(_Vector<2, int>, int64_t)">;
+def predsumu_u32x2_u64 : RISCVBuiltin<"uint64_t(_Vector<2, unsigned int>, uint64_t)">;
+
 // Packed Absolute Difference Sum
 def pabdsumu_u8x4_u32 : RISCVBuiltin<"unsigned int(_Vector<4, unsigned char>, _Vector<4, unsigned char>)">;
 def pabdsumau_u8x4_u32 : RISCVBuiltin<"unsigned int(unsigned int, _Vector<4, unsigned char>, _Vector<4, unsigned char>)">;

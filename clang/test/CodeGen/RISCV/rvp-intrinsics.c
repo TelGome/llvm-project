@@ -2988,6 +2988,346 @@ int32x2_t test_pmerge_i32x2(int32x2_t a, int32x2_t b, uint32x2_t m) {
   return __riscv_pmerge_i32x2(a, b, m);
 }
 
+/* Packed Reduction Sum */
+
+// RV32-LABEL: define dso_local i32 @test_predsum_i8x4_i32(
+// RV32-SAME: i32 noundef [[A_COERCE:%.*]], i32 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = bitcast i32 [[A_COERCE]] to <4 x i8>
+// RV32-NEXT:    [[TMP1:%.*]] = call i32 @llvm.riscv.predsum.i32.v4i8(<4 x i8> [[TMP0]], i32 [[B]])
+// RV32-NEXT:    ret i32 [[TMP1]]
+//
+// RV64-LABEL: define dso_local signext i32 @test_predsum_i8x4_i32(
+// RV64-SAME: i32 noundef [[A_COERCE:%.*]], i32 noundef signext [[B:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = zext i32 [[A_COERCE]] to i64
+// RV64-NEXT:    [[TMP1:%.*]] = bitcast i64 [[TMP0]] to <8 x i8>
+// RV64-NEXT:    [[TMP2:%.*]] = zext i32 [[B]] to i64
+// RV64-NEXT:    [[TMP3:%.*]] = call i64 @llvm.riscv.predsum.i64.v8i8(<8 x i8> [[TMP1]], i64 [[TMP2]])
+// RV64-NEXT:    [[TMP4:%.*]] = trunc i64 [[TMP3]] to i32
+// RV64-NEXT:    ret i32 [[TMP4]]
+//
+int32_t test_predsum_i8x4_i32(int8x4_t a, int32_t b) {
+  return __riscv_predsum_i8x4_i32(a, b);
+}
+
+// RV32-LABEL: define dso_local i32 @test_predsumu_u8x4_u32(
+// RV32-SAME: i32 noundef [[A_COERCE:%.*]], i32 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = bitcast i32 [[A_COERCE]] to <4 x i8>
+// RV32-NEXT:    [[TMP1:%.*]] = call i32 @llvm.riscv.predsumu.i32.v4i8(<4 x i8> [[TMP0]], i32 [[B]])
+// RV32-NEXT:    ret i32 [[TMP1]]
+//
+// RV64-LABEL: define dso_local signext i32 @test_predsumu_u8x4_u32(
+// RV64-SAME: i32 noundef [[A_COERCE:%.*]], i32 noundef signext [[B:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = zext i32 [[A_COERCE]] to i64
+// RV64-NEXT:    [[TMP1:%.*]] = bitcast i64 [[TMP0]] to <8 x i8>
+// RV64-NEXT:    [[TMP2:%.*]] = zext i32 [[B]] to i64
+// RV64-NEXT:    [[TMP3:%.*]] = call i64 @llvm.riscv.predsumu.i64.v8i8(<8 x i8> [[TMP1]], i64 [[TMP2]])
+// RV64-NEXT:    [[TMP4:%.*]] = trunc i64 [[TMP3]] to i32
+// RV64-NEXT:    ret i32 [[TMP4]]
+//
+uint32_t test_predsumu_u8x4_u32(uint8x4_t a, uint32_t b) {
+  return __riscv_predsumu_u8x4_u32(a, b);
+}
+
+// RV32-LABEL: define dso_local i32 @test_predsum_i16x2_i32(
+// RV32-SAME: i32 noundef [[A_COERCE:%.*]], i32 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = bitcast i32 [[A_COERCE]] to <2 x i16>
+// RV32-NEXT:    [[TMP1:%.*]] = call i32 @llvm.riscv.predsum.i32.v2i16(<2 x i16> [[TMP0]], i32 [[B]])
+// RV32-NEXT:    ret i32 [[TMP1]]
+//
+// RV64-LABEL: define dso_local signext i32 @test_predsum_i16x2_i32(
+// RV64-SAME: i32 noundef [[A_COERCE:%.*]], i32 noundef signext [[B:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = zext i32 [[A_COERCE]] to i64
+// RV64-NEXT:    [[TMP1:%.*]] = bitcast i64 [[TMP0]] to <4 x i16>
+// RV64-NEXT:    [[TMP2:%.*]] = zext i32 [[B]] to i64
+// RV64-NEXT:    [[TMP3:%.*]] = call i64 @llvm.riscv.predsum.i64.v4i16(<4 x i16> [[TMP1]], i64 [[TMP2]])
+// RV64-NEXT:    [[TMP4:%.*]] = trunc i64 [[TMP3]] to i32
+// RV64-NEXT:    ret i32 [[TMP4]]
+//
+int32_t test_predsum_i16x2_i32(int16x2_t a, int32_t b) {
+  return __riscv_predsum_i16x2_i32(a, b);
+}
+
+// RV32-LABEL: define dso_local i32 @test_predsumu_u16x2_u32(
+// RV32-SAME: i32 noundef [[A_COERCE:%.*]], i32 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = bitcast i32 [[A_COERCE]] to <2 x i16>
+// RV32-NEXT:    [[TMP1:%.*]] = call i32 @llvm.riscv.predsumu.i32.v2i16(<2 x i16> [[TMP0]], i32 [[B]])
+// RV32-NEXT:    ret i32 [[TMP1]]
+//
+// RV64-LABEL: define dso_local signext i32 @test_predsumu_u16x2_u32(
+// RV64-SAME: i32 noundef [[A_COERCE:%.*]], i32 noundef signext [[B:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = zext i32 [[A_COERCE]] to i64
+// RV64-NEXT:    [[TMP1:%.*]] = bitcast i64 [[TMP0]] to <4 x i16>
+// RV64-NEXT:    [[TMP2:%.*]] = zext i32 [[B]] to i64
+// RV64-NEXT:    [[TMP3:%.*]] = call i64 @llvm.riscv.predsumu.i64.v4i16(<4 x i16> [[TMP1]], i64 [[TMP2]])
+// RV64-NEXT:    [[TMP4:%.*]] = trunc i64 [[TMP3]] to i32
+// RV64-NEXT:    ret i32 [[TMP4]]
+//
+uint32_t test_predsumu_u16x2_u32(uint16x2_t a, uint32_t b) {
+  return __riscv_predsumu_u16x2_u32(a, b);
+}
+
+// RV32-LABEL: define dso_local i32 @test_predsum_i8x8_i32(
+// RV32-SAME: i64 noundef [[A_COERCE:%.*]], i32 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = trunc i64 [[A_COERCE]] to i32
+// RV32-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP0]] to <4 x i8>
+// RV32-NEXT:    [[TMP2:%.*]] = lshr i64 [[A_COERCE]], 32
+// RV32-NEXT:    [[TMP3:%.*]] = trunc nuw i64 [[TMP2]] to i32
+// RV32-NEXT:    [[TMP4:%.*]] = bitcast i32 [[TMP3]] to <4 x i8>
+// RV32-NEXT:    [[TMP5:%.*]] = call i32 @llvm.riscv.predsum.i32.v4i8(<4 x i8> [[TMP1]], i32 [[B]])
+// RV32-NEXT:    [[TMP6:%.*]] = call i32 @llvm.riscv.predsum.i32.v4i8(<4 x i8> [[TMP4]], i32 [[TMP5]])
+// RV32-NEXT:    ret i32 [[TMP6]]
+//
+// RV64-LABEL: define dso_local signext i32 @test_predsum_i8x8_i32(
+// RV64-SAME: i64 noundef [[A_COERCE:%.*]], i32 noundef signext [[B:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <8 x i8>
+// RV64-NEXT:    [[TMP1:%.*]] = zext i32 [[B]] to i64
+// RV64-NEXT:    [[TMP2:%.*]] = call i64 @llvm.riscv.predsum.i64.v8i8(<8 x i8> [[TMP0]], i64 [[TMP1]])
+// RV64-NEXT:    [[TMP3:%.*]] = trunc i64 [[TMP2]] to i32
+// RV64-NEXT:    ret i32 [[TMP3]]
+//
+int32_t test_predsum_i8x8_i32(int8x8_t a, int32_t b) {
+  return __riscv_predsum_i8x8_i32(a, b);
+}
+
+// RV32-LABEL: define dso_local i32 @test_predsumu_u8x8_u32(
+// RV32-SAME: i64 noundef [[A_COERCE:%.*]], i32 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = trunc i64 [[A_COERCE]] to i32
+// RV32-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP0]] to <4 x i8>
+// RV32-NEXT:    [[TMP2:%.*]] = lshr i64 [[A_COERCE]], 32
+// RV32-NEXT:    [[TMP3:%.*]] = trunc nuw i64 [[TMP2]] to i32
+// RV32-NEXT:    [[TMP4:%.*]] = bitcast i32 [[TMP3]] to <4 x i8>
+// RV32-NEXT:    [[TMP5:%.*]] = call i32 @llvm.riscv.predsumu.i32.v4i8(<4 x i8> [[TMP1]], i32 [[B]])
+// RV32-NEXT:    [[TMP6:%.*]] = call i32 @llvm.riscv.predsumu.i32.v4i8(<4 x i8> [[TMP4]], i32 [[TMP5]])
+// RV32-NEXT:    ret i32 [[TMP6]]
+//
+// RV64-LABEL: define dso_local signext i32 @test_predsumu_u8x8_u32(
+// RV64-SAME: i64 noundef [[A_COERCE:%.*]], i32 noundef signext [[B:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <8 x i8>
+// RV64-NEXT:    [[TMP1:%.*]] = zext i32 [[B]] to i64
+// RV64-NEXT:    [[TMP2:%.*]] = call i64 @llvm.riscv.predsumu.i64.v8i8(<8 x i8> [[TMP0]], i64 [[TMP1]])
+// RV64-NEXT:    [[TMP3:%.*]] = trunc i64 [[TMP2]] to i32
+// RV64-NEXT:    ret i32 [[TMP3]]
+//
+uint32_t test_predsumu_u8x8_u32(uint8x8_t a, uint32_t b) {
+  return __riscv_predsumu_u8x8_u32(a, b);
+}
+
+// RV32-LABEL: define dso_local i32 @test_predsum_i16x4_i32(
+// RV32-SAME: i64 noundef [[A_COERCE:%.*]], i32 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = trunc i64 [[A_COERCE]] to i32
+// RV32-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP0]] to <2 x i16>
+// RV32-NEXT:    [[TMP2:%.*]] = lshr i64 [[A_COERCE]], 32
+// RV32-NEXT:    [[TMP3:%.*]] = trunc nuw i64 [[TMP2]] to i32
+// RV32-NEXT:    [[TMP4:%.*]] = bitcast i32 [[TMP3]] to <2 x i16>
+// RV32-NEXT:    [[TMP5:%.*]] = call i32 @llvm.riscv.predsum.i32.v2i16(<2 x i16> [[TMP1]], i32 [[B]])
+// RV32-NEXT:    [[TMP6:%.*]] = call i32 @llvm.riscv.predsum.i32.v2i16(<2 x i16> [[TMP4]], i32 [[TMP5]])
+// RV32-NEXT:    ret i32 [[TMP6]]
+//
+// RV64-LABEL: define dso_local signext i32 @test_predsum_i16x4_i32(
+// RV64-SAME: i64 noundef [[A_COERCE:%.*]], i32 noundef signext [[B:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <4 x i16>
+// RV64-NEXT:    [[TMP1:%.*]] = zext i32 [[B]] to i64
+// RV64-NEXT:    [[TMP2:%.*]] = call i64 @llvm.riscv.predsum.i64.v4i16(<4 x i16> [[TMP0]], i64 [[TMP1]])
+// RV64-NEXT:    [[TMP3:%.*]] = trunc i64 [[TMP2]] to i32
+// RV64-NEXT:    ret i32 [[TMP3]]
+//
+int32_t test_predsum_i16x4_i32(int16x4_t a, int32_t b) {
+  return __riscv_predsum_i16x4_i32(a, b);
+}
+
+// RV32-LABEL: define dso_local i32 @test_predsumu_u16x4_u32(
+// RV32-SAME: i64 noundef [[A_COERCE:%.*]], i32 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = trunc i64 [[A_COERCE]] to i32
+// RV32-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP0]] to <2 x i16>
+// RV32-NEXT:    [[TMP2:%.*]] = lshr i64 [[A_COERCE]], 32
+// RV32-NEXT:    [[TMP3:%.*]] = trunc nuw i64 [[TMP2]] to i32
+// RV32-NEXT:    [[TMP4:%.*]] = bitcast i32 [[TMP3]] to <2 x i16>
+// RV32-NEXT:    [[TMP5:%.*]] = call i32 @llvm.riscv.predsumu.i32.v2i16(<2 x i16> [[TMP1]], i32 [[B]])
+// RV32-NEXT:    [[TMP6:%.*]] = call i32 @llvm.riscv.predsumu.i32.v2i16(<2 x i16> [[TMP4]], i32 [[TMP5]])
+// RV32-NEXT:    ret i32 [[TMP6]]
+//
+// RV64-LABEL: define dso_local signext i32 @test_predsumu_u16x4_u32(
+// RV64-SAME: i64 noundef [[A_COERCE:%.*]], i32 noundef signext [[B:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <4 x i16>
+// RV64-NEXT:    [[TMP1:%.*]] = zext i32 [[B]] to i64
+// RV64-NEXT:    [[TMP2:%.*]] = call i64 @llvm.riscv.predsumu.i64.v4i16(<4 x i16> [[TMP0]], i64 [[TMP1]])
+// RV64-NEXT:    [[TMP3:%.*]] = trunc i64 [[TMP2]] to i32
+// RV64-NEXT:    ret i32 [[TMP3]]
+//
+uint32_t test_predsumu_u16x4_u32(uint16x4_t a, uint32_t b) {
+  return __riscv_predsumu_u16x4_u32(a, b);
+}
+
+// RV32-LABEL: define dso_local i64 @test_predsum_i8x8_i64(
+// RV32-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = trunc i64 [[A_COERCE]] to i32
+// RV32-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP0]] to <4 x i8>
+// RV32-NEXT:    [[TMP2:%.*]] = lshr i64 [[A_COERCE]], 32
+// RV32-NEXT:    [[TMP3:%.*]] = trunc nuw i64 [[TMP2]] to i32
+// RV32-NEXT:    [[TMP4:%.*]] = bitcast i32 [[TMP3]] to <4 x i8>
+// RV32-NEXT:    [[TMP5:%.*]] = call i32 @llvm.riscv.predsum.i32.v4i8(<4 x i8> [[TMP1]], i32 0)
+// RV32-NEXT:    [[TMP6:%.*]] = call i32 @llvm.riscv.predsum.i32.v4i8(<4 x i8> [[TMP4]], i32 0)
+// RV32-NEXT:    [[TMP7:%.*]] = sext i32 [[TMP5]] to i64
+// RV32-NEXT:    [[TMP8:%.*]] = add i64 [[B]], [[TMP7]]
+// RV32-NEXT:    [[TMP9:%.*]] = sext i32 [[TMP6]] to i64
+// RV32-NEXT:    [[TMP10:%.*]] = add i64 [[TMP8]], [[TMP9]]
+// RV32-NEXT:    ret i64 [[TMP10]]
+//
+// RV64-LABEL: define dso_local i64 @test_predsum_i8x8_i64(
+// RV64-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <8 x i8>
+// RV64-NEXT:    [[TMP1:%.*]] = call i64 @llvm.riscv.predsum.i64.v8i8(<8 x i8> [[TMP0]], i64 [[B]])
+// RV64-NEXT:    ret i64 [[TMP1]]
+//
+int64_t test_predsum_i8x8_i64(int8x8_t a, int64_t b) {
+  return __riscv_predsum_i8x8_i64(a, b);
+}
+
+// RV32-LABEL: define dso_local i64 @test_predsumu_u8x8_u64(
+// RV32-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = trunc i64 [[A_COERCE]] to i32
+// RV32-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP0]] to <4 x i8>
+// RV32-NEXT:    [[TMP2:%.*]] = lshr i64 [[A_COERCE]], 32
+// RV32-NEXT:    [[TMP3:%.*]] = trunc nuw i64 [[TMP2]] to i32
+// RV32-NEXT:    [[TMP4:%.*]] = bitcast i32 [[TMP3]] to <4 x i8>
+// RV32-NEXT:    [[TMP5:%.*]] = call i32 @llvm.riscv.predsumu.i32.v4i8(<4 x i8> [[TMP1]], i32 0)
+// RV32-NEXT:    [[TMP6:%.*]] = call i32 @llvm.riscv.predsumu.i32.v4i8(<4 x i8> [[TMP4]], i32 0)
+// RV32-NEXT:    [[TMP7:%.*]] = zext i32 [[TMP5]] to i64
+// RV32-NEXT:    [[TMP8:%.*]] = add i64 [[B]], [[TMP7]]
+// RV32-NEXT:    [[TMP9:%.*]] = zext i32 [[TMP6]] to i64
+// RV32-NEXT:    [[TMP10:%.*]] = add i64 [[TMP8]], [[TMP9]]
+// RV32-NEXT:    ret i64 [[TMP10]]
+//
+// RV64-LABEL: define dso_local i64 @test_predsumu_u8x8_u64(
+// RV64-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <8 x i8>
+// RV64-NEXT:    [[TMP1:%.*]] = call i64 @llvm.riscv.predsumu.i64.v8i8(<8 x i8> [[TMP0]], i64 [[B]])
+// RV64-NEXT:    ret i64 [[TMP1]]
+//
+uint64_t test_predsumu_u8x8_u64(uint8x8_t a, uint64_t b) {
+  return __riscv_predsumu_u8x8_u64(a, b);
+}
+
+// RV32-LABEL: define dso_local i64 @test_predsum_i16x4_i64(
+// RV32-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = trunc i64 [[A_COERCE]] to i32
+// RV32-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP0]] to <2 x i16>
+// RV32-NEXT:    [[TMP2:%.*]] = lshr i64 [[A_COERCE]], 32
+// RV32-NEXT:    [[TMP3:%.*]] = trunc nuw i64 [[TMP2]] to i32
+// RV32-NEXT:    [[TMP4:%.*]] = bitcast i32 [[TMP3]] to <2 x i16>
+// RV32-NEXT:    [[TMP5:%.*]] = call i32 @llvm.riscv.predsum.i32.v2i16(<2 x i16> [[TMP1]], i32 0)
+// RV32-NEXT:    [[TMP6:%.*]] = call i32 @llvm.riscv.predsum.i32.v2i16(<2 x i16> [[TMP4]], i32 0)
+// RV32-NEXT:    [[TMP7:%.*]] = sext i32 [[TMP5]] to i64
+// RV32-NEXT:    [[TMP8:%.*]] = add i64 [[B]], [[TMP7]]
+// RV32-NEXT:    [[TMP9:%.*]] = sext i32 [[TMP6]] to i64
+// RV32-NEXT:    [[TMP10:%.*]] = add i64 [[TMP8]], [[TMP9]]
+// RV32-NEXT:    ret i64 [[TMP10]]
+//
+// RV64-LABEL: define dso_local i64 @test_predsum_i16x4_i64(
+// RV64-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <4 x i16>
+// RV64-NEXT:    [[TMP1:%.*]] = call i64 @llvm.riscv.predsum.i64.v4i16(<4 x i16> [[TMP0]], i64 [[B]])
+// RV64-NEXT:    ret i64 [[TMP1]]
+//
+int64_t test_predsum_i16x4_i64(int16x4_t a, int64_t b) {
+  return __riscv_predsum_i16x4_i64(a, b);
+}
+
+// RV32-LABEL: define dso_local i64 @test_predsumu_u16x4_u64(
+// RV32-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = trunc i64 [[A_COERCE]] to i32
+// RV32-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP0]] to <2 x i16>
+// RV32-NEXT:    [[TMP2:%.*]] = lshr i64 [[A_COERCE]], 32
+// RV32-NEXT:    [[TMP3:%.*]] = trunc nuw i64 [[TMP2]] to i32
+// RV32-NEXT:    [[TMP4:%.*]] = bitcast i32 [[TMP3]] to <2 x i16>
+// RV32-NEXT:    [[TMP5:%.*]] = call i32 @llvm.riscv.predsumu.i32.v2i16(<2 x i16> [[TMP1]], i32 0)
+// RV32-NEXT:    [[TMP6:%.*]] = call i32 @llvm.riscv.predsumu.i32.v2i16(<2 x i16> [[TMP4]], i32 0)
+// RV32-NEXT:    [[TMP7:%.*]] = zext i32 [[TMP5]] to i64
+// RV32-NEXT:    [[TMP8:%.*]] = add i64 [[B]], [[TMP7]]
+// RV32-NEXT:    [[TMP9:%.*]] = zext i32 [[TMP6]] to i64
+// RV32-NEXT:    [[TMP10:%.*]] = add i64 [[TMP8]], [[TMP9]]
+// RV32-NEXT:    ret i64 [[TMP10]]
+//
+// RV64-LABEL: define dso_local i64 @test_predsumu_u16x4_u64(
+// RV64-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <4 x i16>
+// RV64-NEXT:    [[TMP1:%.*]] = call i64 @llvm.riscv.predsumu.i64.v4i16(<4 x i16> [[TMP0]], i64 [[B]])
+// RV64-NEXT:    ret i64 [[TMP1]]
+//
+uint64_t test_predsumu_u16x4_u64(uint16x4_t a, uint64_t b) {
+  return __riscv_predsumu_u16x4_u64(a, b);
+}
+
+// RV32-LABEL: define dso_local i64 @test_predsum_i32x2_i64(
+// RV32-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <2 x i32>
+// RV32-NEXT:    [[TMP1:%.*]] = extractelement <2 x i32> [[TMP0]], i64 0
+// RV32-NEXT:    [[TMP2:%.*]] = extractelement <2 x i32> [[TMP0]], i64 1
+// RV32-NEXT:    [[TMP3:%.*]] = sext i32 [[TMP1]] to i64
+// RV32-NEXT:    [[TMP4:%.*]] = add i64 [[B]], [[TMP3]]
+// RV32-NEXT:    [[TMP5:%.*]] = sext i32 [[TMP2]] to i64
+// RV32-NEXT:    [[TMP6:%.*]] = add i64 [[TMP4]], [[TMP5]]
+// RV32-NEXT:    ret i64 [[TMP6]]
+//
+// RV64-LABEL: define dso_local i64 @test_predsum_i32x2_i64(
+// RV64-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <2 x i32>
+// RV64-NEXT:    [[TMP1:%.*]] = call i64 @llvm.riscv.predsum.i64.v2i32(<2 x i32> [[TMP0]], i64 [[B]])
+// RV64-NEXT:    ret i64 [[TMP1]]
+//
+int64_t test_predsum_i32x2_i64(int32x2_t a, int64_t b) {
+  return __riscv_predsum_i32x2_i64(a, b);
+}
+
+// RV32-LABEL: define dso_local i64 @test_predsumu_u32x2_u64(
+// RV32-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV32-NEXT:  [[ENTRY:.*:]]
+// RV32-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <2 x i32>
+// RV32-NEXT:    [[TMP1:%.*]] = extractelement <2 x i32> [[TMP0]], i64 0
+// RV32-NEXT:    [[TMP2:%.*]] = extractelement <2 x i32> [[TMP0]], i64 1
+// RV32-NEXT:    [[TMP3:%.*]] = zext i32 [[TMP1]] to i64
+// RV32-NEXT:    [[TMP4:%.*]] = add i64 [[B]], [[TMP3]]
+// RV32-NEXT:    [[TMP5:%.*]] = zext i32 [[TMP2]] to i64
+// RV32-NEXT:    [[TMP6:%.*]] = add i64 [[TMP4]], [[TMP5]]
+// RV32-NEXT:    ret i64 [[TMP6]]
+//
+// RV64-LABEL: define dso_local i64 @test_predsumu_u32x2_u64(
+// RV64-SAME: i64 noundef [[A_COERCE:%.*]], i64 noundef [[B:%.*]]) #[[ATTR0]] {
+// RV64-NEXT:  [[ENTRY:.*:]]
+// RV64-NEXT:    [[TMP0:%.*]] = bitcast i64 [[A_COERCE]] to <2 x i32>
+// RV64-NEXT:    [[TMP1:%.*]] = call i64 @llvm.riscv.predsumu.i64.v2i32(<2 x i32> [[TMP0]], i64 [[B]])
+// RV64-NEXT:    ret i64 [[TMP1]]
+//
+uint64_t test_predsumu_u32x2_u64(uint32x2_t a, uint64_t b) {
+  return __riscv_predsumu_u32x2_u64(a, b);
+}
+
 /* Packed Absolute Difference Sum */
 
 // RV32-LABEL: define dso_local i32 @test_pabdsumu_u8x4_u32(

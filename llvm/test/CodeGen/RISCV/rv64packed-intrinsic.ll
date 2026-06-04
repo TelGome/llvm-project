@@ -354,6 +354,75 @@ entry:
   ret <2 x i32> %r
 }
 
+; Packed Reduction Sum
+
+declare i64 @llvm.riscv.predsum.i64.v8i8(<8 x i8>, i64)
+declare i64 @llvm.riscv.predsumu.i64.v8i8(<8 x i8>, i64)
+declare i64 @llvm.riscv.predsum.i64.v4i16(<4 x i16>, i64)
+declare i64 @llvm.riscv.predsumu.i64.v4i16(<4 x i16>, i64)
+declare i64 @llvm.riscv.predsum.i64.v2i32(<2 x i32>, i64)
+declare i64 @llvm.riscv.predsumu.i64.v2i32(<2 x i32>, i64)
+
+define i64 @predsum_i8x8_i64(<8 x i8> %a, i64 %b) {
+; RV64P-LABEL: predsum_i8x8_i64:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    predsum.bs a0, a0, a1
+; RV64P-NEXT:    ret
+entry:
+  %sum = call i64 @llvm.riscv.predsum.i64.v8i8(<8 x i8> %a, i64 %b)
+  ret i64 %sum
+}
+
+define i64 @predsumu_u8x8_u64(<8 x i8> %a, i64 %b) {
+; RV64P-LABEL: predsumu_u8x8_u64:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    predsumu.bs a0, a0, a1
+; RV64P-NEXT:    ret
+entry:
+  %sum = call i64 @llvm.riscv.predsumu.i64.v8i8(<8 x i8> %a, i64 %b)
+  ret i64 %sum
+}
+
+define i64 @predsum_i16x4_i64(<4 x i16> %a, i64 %b) {
+; RV64P-LABEL: predsum_i16x4_i64:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    predsum.hs a0, a0, a1
+; RV64P-NEXT:    ret
+entry:
+  %sum = call i64 @llvm.riscv.predsum.i64.v4i16(<4 x i16> %a, i64 %b)
+  ret i64 %sum
+}
+
+define i64 @predsumu_u16x4_u64(<4 x i16> %a, i64 %b) {
+; RV64P-LABEL: predsumu_u16x4_u64:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    predsumu.hs a0, a0, a1
+; RV64P-NEXT:    ret
+entry:
+  %sum = call i64 @llvm.riscv.predsumu.i64.v4i16(<4 x i16> %a, i64 %b)
+  ret i64 %sum
+}
+
+define i64 @predsum_i32x2_i64(<2 x i32> %a, i64 %b) {
+; RV64P-LABEL: predsum_i32x2_i64:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    predsum.ws a0, a0, a1
+; RV64P-NEXT:    ret
+entry:
+  %sum = call i64 @llvm.riscv.predsum.i64.v2i32(<2 x i32> %a, i64 %b)
+  ret i64 %sum
+}
+
+define i64 @predsumu_u32x2_u64(<2 x i32> %a, i64 %b) {
+; RV64P-LABEL: predsumu_u32x2_u64:
+; RV64P:       # %bb.0: # %entry
+; RV64P-NEXT:    predsumu.ws a0, a0, a1
+; RV64P-NEXT:    ret
+entry:
+  %sum = call i64 @llvm.riscv.predsumu.i64.v2i32(<2 x i32> %a, i64 %b)
+  ret i64 %sum
+}
+
 
 ; Packed Absolute Difference Sum
 
@@ -511,4 +580,3 @@ entry:
   %tmp = call <4 x i16> @llvm.riscv.psabs.v4i16(<4 x i16> %a)
   ret <4 x i16> %tmp
 }
-

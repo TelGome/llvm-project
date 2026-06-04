@@ -1859,6 +1859,20 @@ let Predicates = [HasStdExtP] in {
   def : PatGprGpr<int_riscv_pasub, PASUB_H, XLenVecI16VT>;
   def : PatGprGpr<int_riscv_pasubu, PASUBU_H, XLenVecI16VT>;
 
+  // Reduction sum patterns
+  def : Pat<(XLenVT (int_riscv_predsum (XLenVecI8VT GPR:$rs1),
+                                         (XLenVT GPR:$rs2))),
+            (PREDSUM_BS GPR:$rs1, GPR:$rs2)>;
+  def : Pat<(XLenVT (int_riscv_predsumu (XLenVecI8VT GPR:$rs1),
+                                          (XLenVT GPR:$rs2))),
+            (PREDSUMU_BS GPR:$rs1, GPR:$rs2)>;
+  def : Pat<(XLenVT (int_riscv_predsum (XLenVecI16VT GPR:$rs1),
+                                         (XLenVT GPR:$rs2))),
+            (PREDSUM_HS GPR:$rs1, GPR:$rs2)>;
+  def : Pat<(XLenVT (int_riscv_predsumu (XLenVecI16VT GPR:$rs1),
+                                          (XLenVT GPR:$rs2))),
+            (PREDSUMU_HS GPR:$rs1, GPR:$rs2)>;
+
   // 8-bit absolute difference sum patterns
   def : Pat<(XLenVT (int_riscv_pabdsumu (XLenVecI8VT GPR:$rs1),
                                          (XLenVecI8VT GPR:$rs2))),
@@ -2073,6 +2087,12 @@ let Predicates = [HasStdExtP, IsRV64] in {
                  zexti16:$rs1),
             (PPAIRE_H zexti16:$rs1,
                       (XLenVT (PPAIRE_B zexti8:$op1rs1, GPR:$op1rs2)))>;
+
+  // Reduction sum patterns
+  def : Pat<(i64 (int_riscv_predsum (v2i32 GPR:$rs1), (i64 GPR:$rs2))),
+            (PREDSUM_WS GPR:$rs1, GPR:$rs2)>;
+  def : Pat<(i64 (int_riscv_predsumu (v2i32 GPR:$rs1), (i64 GPR:$rs2))),
+            (PREDSUMU_WS GPR:$rs1, GPR:$rs2)>;
 
   // Basic 32-bit arithmetic patterns
   def : PatGprGpr<add, PADD_W, v2i32>;

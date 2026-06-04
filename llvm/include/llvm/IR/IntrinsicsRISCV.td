@@ -2023,6 +2023,12 @@ let TargetPrefix = "riscv" in {
   def int_riscv_pabdu : Intrinsic<[llvm_anyvector_ty],
                                         [LLVMMatchType<0>, LLVMMatchType<0>],
                                         [IntrNoMem, IntrSpeculatable]>;
+  def int_riscv_predsum : Intrinsic<[llvm_anyint_ty],
+                                    [llvm_anyvector_ty, LLVMMatchType<0>],
+                                    [IntrNoMem, IntrSpeculatable]>;
+  def int_riscv_predsumu : Intrinsic<[llvm_anyint_ty],
+                                     [llvm_anyvector_ty, LLVMMatchType<0>],
+                                     [IntrNoMem, IntrSpeculatable]>;
   def int_riscv_pabdsumu : Intrinsic<[llvm_anyint_ty],
                                      [llvm_anyvector_ty, LLVMMatchType<1>],
                                      [IntrNoMem, IntrSpeculatable]>;

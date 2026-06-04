@@ -53,16 +53,22 @@ typedef uint32_t uint32x2_t __attribute__((__vector_size__(8), __aligned__(8)));
     return __builtin_riscv_##name(__rs1, __rs2);                               \
   }
 
-#define __packed_binary_scalar(name, rty, ty)                    \
+#define __packed_binary_scalar(name, rty, ty)                                  \
   static __inline__ rty __DEFAULT_FN_ATTRS                                     \
   __riscv_##name(ty __rs1, ty __rs2) {                                         \
-    return __builtin_riscv_##name(__rs1, __rs2);                       \
+    return __builtin_riscv_##name(__rs1, __rs2);                               \
   }
 
-#define __packed_ternary_scalar(name, rty, ty)                   \
+#define __packed_reduction_sum(name, rty, ty)                                  \
+  static __inline__ rty __DEFAULT_FN_ATTRS                                     \
+  __riscv_##name(ty __rs1, rty __rs2) {                                        \
+    return __builtin_riscv_##name(__rs1, __rs2);                               \
+  }
+
+#define __packed_ternary_scalar(name, rty, ty)                                 \
   static __inline__ rty __DEFAULT_FN_ATTRS                                     \
   __riscv_##name(rty __rd, ty __rs1, ty __rs2) {                               \
-    return __builtin_riscv_##name(__rd, __rs1, __rs2);                 \
+    return __builtin_riscv_##name(__rd, __rs1, __rs2);                         \
   }
 
 #define __packed_shift(name, ty, op, mask)                                     \
@@ -272,6 +278,22 @@ __packed_merge(pmerge_u16x4, uint16x4_t, uint16x4_t)
 __packed_merge(pmerge_i16x4, int16x4_t, uint16x4_t)
 __packed_merge(pmerge_u32x2, uint32x2_t, uint32x2_t)
 __packed_merge(pmerge_i32x2, int32x2_t, uint32x2_t)
+
+/* Packed Reduction Sum */
+__packed_reduction_sum(predsum_i8x4_i32, int32_t, int8x4_t)
+__packed_reduction_sum(predsumu_u8x4_u32, uint32_t, uint8x4_t)
+__packed_reduction_sum(predsum_i16x2_i32, int32_t, int16x2_t)
+__packed_reduction_sum(predsumu_u16x2_u32, uint32_t, uint16x2_t)
+__packed_reduction_sum(predsum_i8x8_i32, int32_t, int8x8_t)
+__packed_reduction_sum(predsumu_u8x8_u32, uint32_t, uint8x8_t)
+__packed_reduction_sum(predsum_i16x4_i32, int32_t, int16x4_t)
+__packed_reduction_sum(predsumu_u16x4_u32, uint32_t, uint16x4_t)
+__packed_reduction_sum(predsum_i8x8_i64, int64_t, int8x8_t)
+__packed_reduction_sum(predsumu_u8x8_u64, uint64_t, uint8x8_t)
+__packed_reduction_sum(predsum_i16x4_i64, int64_t, int16x4_t)
+__packed_reduction_sum(predsumu_u16x4_u64, uint64_t, uint16x4_t)
+__packed_reduction_sum(predsum_i32x2_i64, int64_t, int32x2_t)
+__packed_reduction_sum(predsumu_u32x2_u64, uint64_t, uint32x2_t)
 
 /* Packed Absolute Difference Sum */
 __packed_binary_scalar(pabdsumu_u8x4_u32, uint32_t, uint8x4_t)

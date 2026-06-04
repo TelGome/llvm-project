@@ -312,6 +312,53 @@ entry:
   ret <2 x i32> %r
 }
 
+; Packed Reduction Sum
+
+declare i32 @llvm.riscv.predsum.i32.v4i8(<4 x i8>, i32)
+declare i32 @llvm.riscv.predsumu.i32.v4i8(<4 x i8>, i32)
+declare i32 @llvm.riscv.predsum.i32.v2i16(<2 x i16>, i32)
+declare i32 @llvm.riscv.predsumu.i32.v2i16(<2 x i16>, i32)
+
+define i32 @predsum_i8x4_i32(<4 x i8> %a, i32 %b) {
+; RV32P-LABEL: predsum_i8x4_i32:
+; RV32P:       # %bb.0: # %entry
+; RV32P-NEXT:    predsum.bs a0, a0, a1
+; RV32P-NEXT:    ret
+entry:
+  %sum = call i32 @llvm.riscv.predsum.i32.v4i8(<4 x i8> %a, i32 %b)
+  ret i32 %sum
+}
+
+define i32 @predsumu_u8x4_u32(<4 x i8> %a, i32 %b) {
+; RV32P-LABEL: predsumu_u8x4_u32:
+; RV32P:       # %bb.0: # %entry
+; RV32P-NEXT:    predsumu.bs a0, a0, a1
+; RV32P-NEXT:    ret
+entry:
+  %sum = call i32 @llvm.riscv.predsumu.i32.v4i8(<4 x i8> %a, i32 %b)
+  ret i32 %sum
+}
+
+define i32 @predsum_i16x2_i32(<2 x i16> %a, i32 %b) {
+; RV32P-LABEL: predsum_i16x2_i32:
+; RV32P:       # %bb.0: # %entry
+; RV32P-NEXT:    predsum.hs a0, a0, a1
+; RV32P-NEXT:    ret
+entry:
+  %sum = call i32 @llvm.riscv.predsum.i32.v2i16(<2 x i16> %a, i32 %b)
+  ret i32 %sum
+}
+
+define i32 @predsumu_u16x2_u32(<2 x i16> %a, i32 %b) {
+; RV32P-LABEL: predsumu_u16x2_u32:
+; RV32P:       # %bb.0: # %entry
+; RV32P-NEXT:    predsumu.hs a0, a0, a1
+; RV32P-NEXT:    ret
+entry:
+  %sum = call i32 @llvm.riscv.predsumu.i32.v2i16(<2 x i16> %a, i32 %b)
+  ret i32 %sum
+}
+
 ; Packed Absolute Difference Sum
 
 declare i32 @llvm.riscv.pabdsumu.i32.v4i8(<4 x i8>, <4 x i8>)

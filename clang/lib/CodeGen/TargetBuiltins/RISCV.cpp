@@ -1311,6 +1311,112 @@ Value *CodeGenFunction::EmitRISCVBuiltinExpr(unsigned BuiltinID,
     ID = Intrinsic::riscv_pabdu;
     break;
 
+  // Packed Reduction Sum builtins
+  case RISCV::BI__builtin_riscv_predsum_i8x4_i32:
+  case RISCV::BI__builtin_riscv_predsumu_u8x4_u32:
+  case RISCV::BI__builtin_riscv_predsum_i16x2_i32:
+  case RISCV::BI__builtin_riscv_predsumu_u16x2_u32:
+  case RISCV::BI__builtin_riscv_predsum_i8x8_i32:
+  case RISCV::BI__builtin_riscv_predsumu_u8x8_u32:
+  case RISCV::BI__builtin_riscv_predsum_i16x4_i32:
+  case RISCV::BI__builtin_riscv_predsumu_u16x4_u32:
+  case RISCV::BI__builtin_riscv_predsum_i8x8_i64:
+  case RISCV::BI__builtin_riscv_predsumu_u8x8_u64:
+  case RISCV::BI__builtin_riscv_predsum_i16x4_i64:
+  case RISCV::BI__builtin_riscv_predsumu_u16x4_u64:
+  case RISCV::BI__builtin_riscv_predsum_i32x2_i64:
+  case RISCV::BI__builtin_riscv_predsumu_u32x2_u64: {
+    auto *I32Ty = Builder.getInt32Ty();
+    auto *I64Ty = Builder.getInt64Ty();
+    auto *V4I8Ty = llvm::FixedVectorType::get(Builder.getInt8Ty(), 4);
+    auto *V2I16Ty = llvm::FixedVectorType::get(Builder.getInt16Ty(), 2);
+    auto *V8I8Ty = llvm::FixedVectorType::get(Builder.getInt8Ty(), 8);
+    auto *V4I16Ty = llvm::FixedVectorType::get(Builder.getInt16Ty(), 4);
+    bool IsRV64 =
+        getContext().getTargetInfo().getPointerWidth(LangAS::Default) == 64;
+    bool IsUnsigned =
+        BuiltinID == RISCV::BI__builtin_riscv_predsumu_u8x4_u32 ||
+        BuiltinID == RISCV::BI__builtin_riscv_predsumu_u16x2_u32 ||
+        BuiltinID == RISCV::BI__builtin_riscv_predsumu_u8x8_u32 ||
+        BuiltinID == RISCV::BI__builtin_riscv_predsumu_u16x4_u32 ||
+        BuiltinID == RISCV::BI__builtin_riscv_predsumu_u8x8_u64 ||
+        BuiltinID == RISCV::BI__builtin_riscv_predsumu_u16x4_u64 ||
+        BuiltinID == RISCV::BI__builtin_riscv_predsumu_u32x2_u64;
+    bool Is32BitPacked =
+        BuiltinID == RISCV::BI__builtin_riscv_predsum_i8x4_i32 ||
+        BuiltinID == RISCV::BI__builtin_riscv_predsumu_u8x4_u32 ||
+        BuiltinID == RISCV::BI__builtin_riscv_predsum_i16x2_i32 ||
+        BuiltinID == RISCV::BI__builtin_riscv_predsumu_u16x2_u32;
+    bool IsI32x2 = BuiltinID == RISCV::BI__builtin_riscv_predsum_i32x2_i64 ||
+                   BuiltinID == RISCV::BI__builtin_riscv_predsumu_u32x2_u64;
+    bool IsI16 = BuiltinID == RISCV::BI__builtin_riscv_predsum_i16x2_i32 ||
+                 BuiltinID == RISCV::BI__builtin_riscv_predsumu_u16x2_u32 ||
+                 BuiltinID == RISCV::BI__builtin_riscv_predsum_i16x4_i32 ||
+                 BuiltinID == RISCV::BI__builtin_riscv_predsumu_u16x4_u32 ||
+                 BuiltinID == RISCV::BI__builtin_riscv_predsum_i16x4_i64 ||
+                 BuiltinID == RISCV::BI__builtin_riscv_predsumu_u16x4_u64;
+    Intrinsic::ID IID =
+        IsUnsigned ? Intrinsic::riscv_predsumu : Intrinsic::riscv_predsum;
+
+    auto ExtendToI64 = [&](Value *V) {
+      return IsUnsigned ? Builder.CreateZExt(V, I64Ty)
+                        : Builder.CreateSExt(V, I64Ty);
+    };
+    auto SplitI64Packed = [&](Value *Op, llvm::Type *HalfVecTy) {
+      Value *Packed = Builder.CreateBitCast(Op, I64Ty);
+      Value *Lo =
+          Builder.CreateBitCast(Builder.CreateTrunc(Packed, I32Ty), HalfVecTy);
+      Value *Hi = Builder.CreateBitCast(
+          Builder.CreateTrunc(Builder.CreateLShr(Packed, Builder.getInt64(32)),
+                              I32Ty),
+          HalfVecTy);
+      return std::make_pair(Lo, Hi);
+    };
+
+    if (!IsRV64 && IsI32x2) {
+      Value *Elt0 = Builder.CreateExtractElement(Ops[0], Builder.getInt32(0));
+      Value *Elt1 = Builder.CreateExtractElement(Ops[0], Builder.getInt32(1));
+      return Builder.CreateAdd(Builder.CreateAdd(Ops[1], ExtendToI64(Elt0)),
+                               ExtendToI64(Elt1));
+    }
+
+    if (!IsRV64 && !Is32BitPacked) {
+      llvm::Type *HalfVecTy = IsI16 ? V2I16Ty : V4I8Ty;
+      auto Halves = SplitI64Packed(Ops[0], HalfVecTy);
+      llvm::Function *F = CGM.getIntrinsic(IID, {I32Ty, HalfVecTy});
+      if (ResultType == I32Ty) {
+        Value *Lo = Builder.CreateCall(F, {Halves.first, Ops[1]});
+        return Builder.CreateCall(F, {Halves.second, Lo});
+      }
+
+      Value *Lo = Builder.CreateCall(F, {Halves.first, Builder.getInt32(0)});
+      Value *Hi = Builder.CreateCall(F, {Halves.second, Builder.getInt32(0)});
+      return Builder.CreateAdd(Builder.CreateAdd(Ops[1], ExtendToI64(Lo)),
+                               ExtendToI64(Hi));
+    }
+
+    llvm::Type *VecTy = Ops[0]->getType();
+    llvm::Type *IntTy = ResultType;
+    Value *Acc = Ops[1];
+    if (IsRV64) {
+      if (Is32BitPacked) {
+        llvm::Type *WideVecTy = IsI16 ? V4I16Ty : V8I8Ty;
+        Ops[0] = Builder.CreateBitCast(
+            Builder.CreateZExt(Builder.CreateBitCast(Ops[0], I32Ty), I64Ty),
+            WideVecTy);
+        VecTy = WideVecTy;
+      }
+      IntTy = I64Ty;
+      Acc = Builder.CreateZExtOrTrunc(Acc, I64Ty);
+    }
+
+    llvm::Function *F = CGM.getIntrinsic(IID, {IntTy, VecTy});
+    Value *Result = Builder.CreateCall(F, {Ops[0], Acc});
+    return Result->getType() == ResultType
+               ? Result
+               : Builder.CreateTrunc(Result, ResultType);
+  }
+
   // Packed Absolute Difference Sum builtins
   case RISCV::BI__builtin_riscv_pabdsumu_u8x4_u32:
   case RISCV::BI__builtin_riscv_pabdsumu_u8x8_u32:
