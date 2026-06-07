@@ -168,6 +168,30 @@ __packed_scalar_binary_op(padd_s_u32x2, uint32x2_t, uint32_t, +,
 __packed_scalar_binary_op(padd_s_i32x2, int32x2_t, int32_t, +,
                           __packed_splat2)
 
+/* Packed Averaging Addition and Subtraction (32-bit) */
+__packed_binary(paadd_i8x4, int8x4_t, int8x4_t)
+__packed_binary(paadd_i16x2, int16x2_t, int16x2_t)
+__packed_binary(paaddu_u8x4, uint8x4_t, uint8x4_t)
+__packed_binary(paaddu_u16x2, uint16x2_t, uint16x2_t)
+__packed_binary(pasub_i8x4, int8x4_t, int8x4_t)
+__packed_binary(pasub_i16x2, int16x2_t, int16x2_t)
+__packed_binary(pasubu_u8x4, uint8x4_t, uint8x4_t)
+__packed_binary(pasubu_u16x2, uint16x2_t, uint16x2_t)
+
+/* Packed Averaging Addition and Subtraction (64-bit) */
+__packed_binary(paadd_i8x8, int8x8_t, int8x8_t)
+__packed_binary(paadd_i16x4, int16x4_t, int16x4_t)
+__packed_binary(paadd_i32x2, int32x2_t, int32x2_t)
+__packed_binary(paaddu_u8x8, uint8x8_t, uint8x8_t)
+__packed_binary(paaddu_u16x4, uint16x4_t, uint16x4_t)
+__packed_binary(paaddu_u32x2, uint32x2_t, uint32x2_t)
+__packed_binary(pasub_i8x8, int8x8_t, int8x8_t)
+__packed_binary(pasub_i16x4, int16x4_t, int16x4_t)
+__packed_binary(pasub_i32x2, int32x2_t, int32x2_t)
+__packed_binary(pasubu_u8x8, uint8x8_t, uint8x8_t)
+__packed_binary(pasubu_u16x4, uint16x4_t, uint16x4_t)
+__packed_binary(pasubu_u32x2, uint32x2_t, uint32x2_t)
+
 /* Packed Addition and Subtraction (32-bit) */
 __packed_binary_op(padd_i8x4, int8x4_t, +)
 __packed_binary_op(padd_u8x4, uint8x4_t, +)
@@ -310,14 +334,7 @@ __packed_unary(psabs_i8x8, int8x8_t, int8x8_t)
 __packed_unary(psabs_i16x4, int16x4_t, int16x4_t)
 
 #if __riscv_xlen == 32
-__packed_binary(paadd_i8x4, int8x4_t, int8x4_t)
-__packed_binary(paadd_i16x2, int16x2_t, int16x2_t)
-__packed_binary(paaddu_u8x4, uint8x4_t, uint8x4_t)
-__packed_binary(paaddu_u16x2, uint16x2_t, uint16x2_t)
-__packed_binary(pasub_i8x4, int8x4_t, int8x4_t)
-__packed_binary(pasub_i16x2, int16x2_t, int16x2_t)
-__packed_binary(pasubu_u8x4, uint8x4_t, uint8x4_t)
-__packed_binary(pasubu_u16x2, uint16x2_t, uint16x2_t)
+
 
 /* Packed Absolute Value */
 __packed_unary(pabs_i8x4, uint8x4_t, int8x4_t)
@@ -330,18 +347,6 @@ __packed_binary(pabdu_u16x2, uint16x2_t, uint16x2_t)
 #endif
 
 #if __riscv_xlen == 64
-__packed_binary(paadd_i8x8, int8x8_t, int8x8_t)
-__packed_binary(paadd_i16x4, int16x4_t, int16x4_t)
-__packed_binary(paadd_i32x2, int32x2_t, int32x2_t)
-__packed_binary(paaddu_u8x8, uint8x8_t, uint8x8_t)
-__packed_binary(paaddu_u16x4, uint16x4_t, uint16x4_t)
-__packed_binary(paaddu_u32x2, uint32x2_t, uint32x2_t)
-__packed_binary(pasub_i8x8, int8x8_t, int8x8_t)
-__packed_binary(pasub_i16x4, int16x4_t, int16x4_t)
-__packed_binary(pasub_i32x2, int32x2_t, int32x2_t)
-__packed_binary(pasubu_u8x8, uint8x8_t, uint8x8_t)
-__packed_binary(pasubu_u16x4, uint16x4_t, uint16x4_t)
-__packed_binary(pasubu_u32x2, uint32x2_t, uint32x2_t)
 
 __packed_unary(pabs_i8x8, uint8x8_t, int8x8_t)
 __packed_unary(pabs_i16x4, uint16x4_t, int16x4_t)

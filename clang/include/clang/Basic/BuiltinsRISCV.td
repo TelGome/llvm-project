@@ -141,15 +141,6 @@ def sm3p1 : RISCVBuiltin<"unsigned int(unsigned int)">;
 // Packed SIMD extension. TODO:paired register
 //===----------------------------------------------------------------------===//
 let Features = "experimental-p,32bit" in {
-// Packed Averaging Addition and Subtraction
-def paadd_i8x4 : RISCVBuiltin<"_Vector<4, signed char>(_Vector<4, signed char>, _Vector<4, signed char>)">;
-def paadd_i16x2 : RISCVBuiltin<"_Vector<2, signed short>(_Vector<2, signed short>, _Vector<2, signed short>)">;
-def paaddu_u8x4 : RISCVBuiltin<"_Vector<4, unsigned char>(_Vector<4, unsigned char>, _Vector<4, unsigned char>)">;
-def paaddu_u16x2 : RISCVBuiltin<"_Vector<2, unsigned short>(_Vector<2, unsigned short>, _Vector<2, unsigned short>)">;
-def pasub_i8x4 : RISCVBuiltin<"_Vector<4, signed char>(_Vector<4, signed char>, _Vector<4, signed char>)">;
-def pasub_i16x2 : RISCVBuiltin<"_Vector<2, signed short>(_Vector<2, signed short>, _Vector<2, signed short>)">;
-def pasubu_u8x4 : RISCVBuiltin<"_Vector<4, unsigned char>(_Vector<4, unsigned char>, _Vector<4, unsigned char>)">;
-def pasubu_u16x2 : RISCVBuiltin<"_Vector<2, unsigned short>(_Vector<2, unsigned short>, _Vector<2, unsigned short>)">;
 
 // Packed Absolute Value and Absolute Difference
 def pabs_i8x4 : RISCVBuiltin<"_Vector<4, unsigned char>(_Vector<4, signed char>)">;
@@ -162,7 +153,26 @@ def pabdu_u16x2 : RISCVBuiltin<"_Vector<2, unsigned short>(_Vector<2, unsigned s
 } // Features = "experimental-p,32bit"
 
 let Features = "experimental-p,64bit" in {
+
+// Packed Absolute Value and Absolute Difference
+def pabs_i8x8 : RISCVBuiltin<"_Vector<8, unsigned char>(_Vector<8, signed char>)">;
+def pabs_i16x4 : RISCVBuiltin<"_Vector<4, unsigned short>(_Vector<4, signed short>)">;
+def pabd_i8x8 : RISCVBuiltin<"_Vector<8, unsigned char>(_Vector<8, signed char>, _Vector<8, signed char>)">;
+def pabd_i16x4 : RISCVBuiltin<"_Vector<4, unsigned short>(_Vector<4, signed short>, _Vector<4, signed short>)">;
+def pabdu_u8x8 : RISCVBuiltin<"_Vector<8, unsigned char>(_Vector<8, unsigned char>, _Vector<8, unsigned char>)">;
+def pabdu_u16x4 : RISCVBuiltin<"_Vector<4, unsigned short>(_Vector<4, unsigned short>, _Vector<4, unsigned short>)">;
+} // Features = "experimental-p,64bit"
+
+let Features = "experimental-p" in {
 // Packed Averaging Addition and Subtraction
+def paadd_i8x4 : RISCVBuiltin<"_Vector<4, signed char>(_Vector<4, signed char>, _Vector<4, signed char>)">;
+def paadd_i16x2 : RISCVBuiltin<"_Vector<2, signed short>(_Vector<2, signed short>, _Vector<2, signed short>)">;
+def paaddu_u8x4 : RISCVBuiltin<"_Vector<4, unsigned char>(_Vector<4, unsigned char>, _Vector<4, unsigned char>)">;
+def paaddu_u16x2 : RISCVBuiltin<"_Vector<2, unsigned short>(_Vector<2, unsigned short>, _Vector<2, unsigned short>)">;
+def pasub_i8x4 : RISCVBuiltin<"_Vector<4, signed char>(_Vector<4, signed char>, _Vector<4, signed char>)">;
+def pasub_i16x2 : RISCVBuiltin<"_Vector<2, signed short>(_Vector<2, signed short>, _Vector<2, signed short>)">;
+def pasubu_u8x4 : RISCVBuiltin<"_Vector<4, unsigned char>(_Vector<4, unsigned char>, _Vector<4, unsigned char>)">;
+def pasubu_u16x2 : RISCVBuiltin<"_Vector<2, unsigned short>(_Vector<2, unsigned short>, _Vector<2, unsigned short>)">;
 def paadd_i8x8 : RISCVBuiltin<"_Vector<8, signed char>(_Vector<8, signed char>, _Vector<8, signed char>)">;
 def paadd_i16x4 : RISCVBuiltin<"_Vector<4, signed short>(_Vector<4, signed short>, _Vector<4, signed short>)">;
 def paadd_i32x2 : RISCVBuiltin<"_Vector<2, int>(_Vector<2, int>, _Vector<2, int>)">;
@@ -176,16 +186,6 @@ def pasubu_u8x8 : RISCVBuiltin<"_Vector<8, unsigned char>(_Vector<8, unsigned ch
 def pasubu_u16x4 : RISCVBuiltin<"_Vector<4, unsigned short>(_Vector<4, unsigned short>, _Vector<4, unsigned short>)">;
 def pasubu_u32x2 : RISCVBuiltin<"_Vector<2, unsigned int>(_Vector<2, unsigned int>, _Vector<2, unsigned int>)">;
 
-// Packed Absolute Value and Absolute Difference
-def pabs_i8x8 : RISCVBuiltin<"_Vector<8, unsigned char>(_Vector<8, signed char>)">;
-def pabs_i16x4 : RISCVBuiltin<"_Vector<4, unsigned short>(_Vector<4, signed short>)">;
-def pabd_i8x8 : RISCVBuiltin<"_Vector<8, unsigned char>(_Vector<8, signed char>, _Vector<8, signed char>)">;
-def pabd_i16x4 : RISCVBuiltin<"_Vector<4, unsigned short>(_Vector<4, signed short>, _Vector<4, signed short>)">;
-def pabdu_u8x8 : RISCVBuiltin<"_Vector<8, unsigned char>(_Vector<8, unsigned char>, _Vector<8, unsigned char>)">;
-def pabdu_u16x4 : RISCVBuiltin<"_Vector<4, unsigned short>(_Vector<4, unsigned short>, _Vector<4, unsigned short>)">;
-} // Features = "experimental-p,64bit"
-
-let Features = "experimental-p" in {
 // Packed Reduction Sum
 def predsum_i8x4_i32 : RISCVBuiltin<"int(_Vector<4, signed char>, int)">;
 def predsumu_u8x4_u32 : RISCVBuiltin<"unsigned int(_Vector<4, unsigned char>, unsigned int)">;

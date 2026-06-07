@@ -1722,6 +1722,10 @@ def shiftMask16 : ComplexPattern<XLenVT, 1, "selectShiftMask<16>", [], [], 0>;
 def BuildGPRPair : OutPatFrag<(ops node:$lo, node:$hi),
   (REG_SEQUENCE GPRPair, $lo, sub_gpr_even, $hi, sub_gpr_odd)>;
 
+class PatGprPairGprPair<SDPatternOperator OpNode, RVInst Inst, ValueType vt>
+    : Pat<(vt (OpNode (vt GPRPair:$rs1), (vt GPRPair:$rs2))),
+          (Inst GPRPair:$rs1, GPRPair:$rs2)>;
+
 // Averaging subtraction, (a - b) >> 2
 def riscv_asub : RVSDNode<"ASUB", SDTIntBinOp>;
 def riscv_asubu : RVSDNode<"ASUBU", SDTIntBinOp>;
@@ -2056,6 +2060,22 @@ let Predicates = [HasStdExtP, IsRV32] in {
   // Build vector patterns
   def : Pat<(v2i16 (build_vector (XLenVT GPR:$a), (XLenVT GPR:$b))),
             (PACK GPR:$a, GPR:$b)>;
+  def : Pat<(v2i32 (build_vector (XLenVT GPR:$a), (XLenVT GPR:$b))),
+            (BuildGPRPair GPR:$a, GPR:$b)>;
+
+  // 64-bit packed averaging add/sub intrinsic patterns.
+  def : PatGprPairGprPair<int_riscv_paadd, PAADD_DB, v8i8>;
+  def : PatGprPairGprPair<int_riscv_paadd, PAADD_DH, v4i16>;
+  def : PatGprPairGprPair<int_riscv_paadd, PAADD_DW, v2i32>;
+  def : PatGprPairGprPair<int_riscv_paaddu, PAADDU_DB, v8i8>;
+  def : PatGprPairGprPair<int_riscv_paaddu, PAADDU_DH, v4i16>;
+  def : PatGprPairGprPair<int_riscv_paaddu, PAADDU_DW, v2i32>;
+  def : PatGprPairGprPair<int_riscv_pasub, PASUB_DB, v8i8>;
+  def : PatGprPairGprPair<int_riscv_pasub, PASUB_DH, v4i16>;
+  def : PatGprPairGprPair<int_riscv_pasub, PASUB_DW, v2i32>;
+  def : PatGprPairGprPair<int_riscv_pasubu, PASUBU_DB, v8i8>;
+  def : PatGprPairGprPair<int_riscv_pasubu, PASUBU_DH, v4i16>;
+  def : PatGprPairGprPair<int_riscv_pasubu, PASUBU_DW, v2i32>;
 
 } // Predicates = [HasStdExtP, IsRV32]
 
