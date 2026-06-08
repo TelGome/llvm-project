@@ -1965,11 +1965,21 @@ let Predicates = [HasStdExtP] in {
   def : PatGprGpr<riscv_asub, PASUB_B, XLenVecI8VT>;
   def : PatGprGpr<riscv_asubu, PASUBU_B, XLenVecI8VT>;
 
+  def : PatGprGpr<int_riscv_paadd, PAADD_B, XLenVecI8VT>;
+  def : PatGprGpr<int_riscv_paaddu, PAADDU_B, XLenVecI8VT>;
+  def : PatGprGpr<int_riscv_pasub, PASUB_B, XLenVecI8VT>;
+  def : PatGprGpr<int_riscv_pasubu, PASUBU_B, XLenVecI8VT>;
+
   // 16-bit averaging patterns
   def : PatGprGpr<avgfloors, PAADD_H, XLenVecI16VT>;
   def : PatGprGpr<avgflooru, PAADDU_H, XLenVecI16VT>;
   def : PatGprGpr<riscv_asub, PASUB_H, XLenVecI16VT>;
   def : PatGprGpr<riscv_asubu, PASUBU_H, XLenVecI16VT>;
+
+  def : PatGprGpr<int_riscv_paadd, PAADD_H, XLenVecI16VT>;
+  def : PatGprGpr<int_riscv_paaddu, PAADDU_H, XLenVecI16VT>;
+  def : PatGprGpr<int_riscv_pasub, PASUB_H, XLenVecI16VT>;
+  def : PatGprGpr<int_riscv_pasubu, PASUBU_H, XLenVecI16VT>;
 
   // 8-bit absolute difference patterns
   def : Pat<(XLenVecI8VT (abs GPR:$rs1)), (PABD_B GPR:$rs1, (XLenVecI8VT X0))>;
@@ -2054,7 +2064,6 @@ let Predicates = [HasStdExtP] in {
             (MERGE GPR:$mask, GPR:$false_v, GPR:$true_v)>;
   def : Pat<(XLenVecI16VT (vselect (XLenVecI16VT GPR:$mask), GPR:$true_v, GPR:$false_v)),
             (MERGE GPR:$mask, GPR:$false_v, GPR:$true_v)>;
-
 let append Predicates = [IsRV32] in {
   def : PatGpr<bitreverse, REV_RV32>;
 
@@ -2190,6 +2199,19 @@ let append Predicates = [IsRV32] in {
   def : PatGprPairGprPair<avgflooru, PAADDU_DW, v2i32>;
   def : PatGprPairGprPair<riscv_asub, PASUB_DW, v2i32>;
   def : PatGprPairGprPair<riscv_asubu, PASUBU_DW, v2i32>;
+
+  def : PatGprPairGprPair<int_riscv_paadd, PAADD_DB, v8i8>;
+  def : PatGprPairGprPair<int_riscv_paaddu, PAADDU_DB, v8i8>;
+  def : PatGprPairGprPair<int_riscv_pasub, PASUB_DB, v8i8>;
+  def : PatGprPairGprPair<int_riscv_pasubu, PASUBU_DB, v8i8>;
+  def : PatGprPairGprPair<int_riscv_paadd, PAADD_DH, v4i16>;
+  def : PatGprPairGprPair<int_riscv_paaddu, PAADDU_DH, v4i16>;
+  def : PatGprPairGprPair<int_riscv_pasub, PASUB_DH, v4i16>;
+  def : PatGprPairGprPair<int_riscv_pasubu, PASUBU_DH, v4i16>;
+  def : PatGprPairGprPair<int_riscv_paadd, PAADD_DW, v2i32>;
+  def : PatGprPairGprPair<int_riscv_paaddu, PAADDU_DW, v2i32>;
+  def : PatGprPairGprPair<int_riscv_pasub, PASUB_DW, v2i32>;
+  def : PatGprPairGprPair<int_riscv_pasubu, PASUBU_DW, v2i32>;
 
   // 8-bit absolute difference patterns
   def : Pat<(v8i8 (abs GPRPair:$rs1)), (PABD_DB GPRPair:$rs1, (v8i8 X0_Pair))>;
@@ -2381,9 +2403,15 @@ let append Predicates = [IsRV64] in {
   def : PatGprGpr<avgfloors, PAADD_W, v2i32>;
   def : PatGprGpr<avgflooru, PAADDU_W, v2i32>;
 
+  def : PatGprGpr<int_riscv_paadd, PAADD_W, v2i32>;
+  def : PatGprGpr<int_riscv_paaddu, PAADDU_W, v2i32>;
+
   // 32-bit averaging-sub patterns
   def : PatGprGpr<riscv_asub, PASUB_W, v2i32>;
   def : PatGprGpr<riscv_asubu, PASUBU_W, v2i32>;
+
+  def : PatGprGpr<int_riscv_pasub, PASUB_W, v2i32>;
+  def : PatGprGpr<int_riscv_pasubu, PASUBU_W, v2i32>;
 
   // 32-bit multiply high patterns
   def : PatGprGpr<mulhs, PMULH_W, v2i32>;

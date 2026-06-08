@@ -73,6 +73,12 @@ typedef uint32_t uint32x2_t __attribute__((__vector_size__(8)));
     return builtin(__rs1, __rs2);                                              \
   }
 
+#define __packed_paadd_pasub(name, ty)                                         \
+  static __inline__ ty __DEFAULT_FN_ATTRS                                      \
+  __riscv_##name(ty __rs1, ty __rs2) {                                         \
+    return __builtin_riscv_##name(__rs1, __rs2);                               \
+  }
+
 /* Packed Splat (32-bit) */
 __packed_splat(pmv_s_u8x4, uint8x4_t, uint8_t, __packed_splat4)
 __packed_splat(pmv_s_i8x4, int8x4_t, int8_t, __packed_splat4)
@@ -228,6 +234,30 @@ __packed_unary_op(pnot_u16x4, uint16x4_t, ~)
 __packed_unary_op(pnot_i32x2, int32x2_t, ~)
 __packed_unary_op(pnot_u32x2, uint32x2_t, ~)
 
+/* Packed Averaging Addition and Subtraction (32-bit) */
+__packed_paadd_pasub(paadd_i8x4, int8x4_t)
+__packed_paadd_pasub(paadd_i16x2, int16x2_t)
+__packed_paadd_pasub(paaddu_u8x4, uint8x4_t)
+__packed_paadd_pasub(paaddu_u16x2, uint16x2_t)
+__packed_paadd_pasub(pasub_i8x4, int8x4_t)
+__packed_paadd_pasub(pasub_i16x2, int16x2_t)
+__packed_paadd_pasub(pasubu_u8x4, uint8x4_t)
+__packed_paadd_pasub(pasubu_u16x2, uint16x2_t)
+
+/* Packed Averaging Addition and Subtraction (64-bit) */
+__packed_paadd_pasub(paadd_i8x8, int8x8_t)
+__packed_paadd_pasub(paadd_i16x4, int16x4_t)
+__packed_paadd_pasub(paadd_i32x2, int32x2_t)
+__packed_paadd_pasub(paaddu_u8x8, uint8x8_t)
+__packed_paadd_pasub(paaddu_u16x4, uint16x4_t)
+__packed_paadd_pasub(paaddu_u32x2, uint32x2_t)
+__packed_paadd_pasub(pasub_i8x8, int8x8_t)
+__packed_paadd_pasub(pasub_i16x4, int16x4_t)
+__packed_paadd_pasub(pasub_i32x2, int32x2_t)
+__packed_paadd_pasub(pasubu_u8x8, uint8x8_t)
+__packed_paadd_pasub(pasubu_u16x4, uint16x4_t)
+__packed_paadd_pasub(pasubu_u32x2, uint32x2_t)
+
 #undef __packed_splat2
 #undef __packed_splat4
 #undef __packed_splat8
@@ -240,6 +270,7 @@ __packed_unary_op(pnot_u32x2, uint32x2_t, ~)
 #undef __packed_binary_op
 #undef __packed_unary_op
 #undef __packed_minmax
+#undef __packed_paadd_pasub
 #undef __DEFAULT_FN_ATTRS
 
 #if defined(__cplusplus)
