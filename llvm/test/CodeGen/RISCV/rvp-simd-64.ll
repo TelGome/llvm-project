@@ -9633,3 +9633,104 @@ define i64 @test_pm4addasu_v4i16_i64(i64 %rd, <4 x i16> %a,
   %r = add i64 %rd, %mul
   ret i64 %r
 }
+
+
+; Packed Multiplication with Horizontal Addition and Accumulate.
+define i32 @test_pm4adda_v4i8_i32(i32 %rd, <4 x i8> %a, <4 x i8> %b) {
+; CHECK-LABEL: test_pm4adda_v4i8_i32:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    pm4adda.b a0, a1, a2
+; CHECK-NEXT:    ret
+  %r = call i32 @llvm.riscv.pm4adda.i32.v4i8(i32 %rd, <4 x i8> %a, <4 x i8> %b)
+  ret i32 %r
+}
+
+define i32 @test_pm4addau_v4i8_i32(i32 %rd, <4 x i8> %a, <4 x i8> %b) {
+; CHECK-LABEL: test_pm4addau_v4i8_i32:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    pm4addau.b a0, a1, a2
+; CHECK-NEXT:    ret
+  %r = call i32 @llvm.riscv.pm4addau.i32.v4i8(i32 %rd, <4 x i8> %a, <4 x i8> %b)
+  ret i32 %r
+}
+
+define i32 @test_pm4addasu_v4i8_i32(i32 %rd, <4 x i8> %a, <4 x i8> %b) {
+; CHECK-LABEL: test_pm4addasu_v4i8_i32:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    pm4addasu.b a0, a1, a2
+; CHECK-NEXT:    ret
+  %r = call i32 @llvm.riscv.pm4addasu.i32.v4i8(i32 %rd, <4 x i8> %a, <4 x i8> %b)
+  ret i32 %r
+}
+
+define i32 @test_pm2adda_v2i16_i32(i32 %rd, <2 x i16> %a, <2 x i16> %b) {
+; CHECK-LABEL: test_pm2adda_v2i16_i32:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    pm2adda.h a0, a1, a2
+; CHECK-NEXT:    ret
+  %r = call i32 @llvm.riscv.pm2adda.i32.v2i16(i32 %rd, <2 x i16> %a, <2 x i16> %b)
+  ret i32 %r
+}
+
+define i32 @test_pm2adda_x_v2i16_i32(i32 %rd, <2 x i16> %a, <2 x i16> %b) {
+; CHECK-LABEL: test_pm2adda_x_v2i16_i32:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    pm2adda.hx a0, a1, a2
+; CHECK-NEXT:    ret
+  %r = call i32 @llvm.riscv.pm2adda.x.i32.v2i16(i32 %rd, <2 x i16> %a, <2 x i16> %b)
+  ret i32 %r
+}
+
+define i32 @test_pm2addau_v2i16_i32(i32 %rd, <2 x i16> %a, <2 x i16> %b) {
+; CHECK-LABEL: test_pm2addau_v2i16_i32:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    pm2addau.h a0, a1, a2
+; CHECK-NEXT:    ret
+  %r = call i32 @llvm.riscv.pm2addau.i32.v2i16(i32 %rd, <2 x i16> %a, <2 x i16> %b)
+  ret i32 %r
+}
+
+define i32 @test_pmq2adda_v2i16_i32(i32 %rd, <2 x i16> %a, <2 x i16> %b) {
+; CHECK-LABEL: test_pmq2adda_v2i16_i32:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    pmq2adda.h a0, a1, a2
+; CHECK-NEXT:    ret
+  %r = call i32 @llvm.riscv.pmq2adda.i32.v2i16(i32 %rd, <2 x i16> %a, <2 x i16> %b)
+  ret i32 %r
+}
+
+define i32 @test_pmqr2adda_v2i16_i32(i32 %rd, <2 x i16> %a, <2 x i16> %b) {
+; CHECK-LABEL: test_pmqr2adda_v2i16_i32:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    pmqr2adda.h a0, a1, a2
+; CHECK-NEXT:    ret
+  %r = call i32 @llvm.riscv.pmqr2adda.i32.v2i16(i32 %rd, <2 x i16> %a, <2 x i16> %b)
+  ret i32 %r
+}
+
+define i32 @test_pm2suba_v2i16_i32(i32 %rd, <2 x i16> %a, <2 x i16> %b) {
+; CHECK-LABEL: test_pm2suba_v2i16_i32:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    pm2suba.h a0, a1, a2
+; CHECK-NEXT:    ret
+  %r = call i32 @llvm.riscv.pm2suba.i32.v2i16(i32 %rd, <2 x i16> %a, <2 x i16> %b)
+  ret i32 %r
+}
+
+define i32 @test_pm2suba_x_v2i16_i32(i32 %rd, <2 x i16> %a, <2 x i16> %b) {
+; CHECK-LABEL: test_pm2suba_x_v2i16_i32:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    pm2suba.hx a0, a1, a2
+; CHECK-NEXT:    ret
+  %r = call i32 @llvm.riscv.pm2suba.x.i32.v2i16(i32 %rd, <2 x i16> %a, <2 x i16> %b)
+  ret i32 %r
+}
+
+define i32 @test_pm2addasu_v2i16_i32(i32 %rd, <2 x i16> %a, <2 x i16> %b) {
+; CHECK-LABEL: test_pm2addasu_v2i16_i32:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    pm2addasu.h a0, a1, a2
+; CHECK-NEXT:    ret
+  %r = call i32 @llvm.riscv.pm2addasu.i32.v2i16(i32 %rd, <2 x i16> %a, <2 x i16> %b)
+  ret i32 %r
+}
